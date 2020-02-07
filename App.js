@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
+import AppNavigator from './navigation/AppNavigator';
 
-  render() {
-    return (
-      <View>
-        <Text> App </Text>
-      </View>
-    );
-  }
+export default function App() {
+  return(
+    <AppNavigator /> 
+  );
 }
