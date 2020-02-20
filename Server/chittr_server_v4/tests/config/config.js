@@ -7,8 +7,8 @@
 'use strict';
 
 const
-    VERSION = 'v0.0.4',
-    BASEURL = 'http://localhost:3333/api/v0.0.4',
+    VERSION = 'v0.0.5',
+    BASEURL = 'http://localhost:3333/api/v0.0.5',
     BASEPATH = `/api/${VERSION}`,
     convict = require('convict');
 

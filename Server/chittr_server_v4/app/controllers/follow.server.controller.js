@@ -4,7 +4,7 @@ const
     log = require('../lib/logger')(),
     validator = require('../lib/validator'),
     config = require('../../config/config.js'),
-    schema = require('../../config/zedrem-Chittr-0.0.4-swagger.json');
+    schema = require('../../config/zedrem-Chittr-0.0.5-swagger.json');
 
 
 exports.search_users = function(req, res){

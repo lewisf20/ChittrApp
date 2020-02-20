@@ -127,7 +127,7 @@ const removeToken = (token, done) => {
  */
 const getOne = (id, done) => {
     // console.log("1");
-    let query = 'SELECT chittr_user.user_givenname, chittr_user.user_familyname, chittr_user.user_email FROM chittr_user WHERE user_id=?';
+    let query = 'SELECT chittr_user.user_id, chittr_user.user_givenname, chittr_user.user_familyname, chittr_user.user_email FROM chittr_user WHERE user_id=?';
     db.get_pool().query(
         query,
         [id],
@@ -143,7 +143,7 @@ const getOne = (id, done) => {
 
                 // console.log(user);
 
-                let chit_query = 'SELECT c.chit_timestamp, c.chit_content, l.latitude, l.longitude ' +
+                let chit_query = 'SELECT c.chit_id, c.chit_timestamp, c.chit_content, l.latitude, l.longitude ' +
                     'FROM chittr_chit c ' +
                     'LEFT JOIN chittr_chit_location l ON c.chit_id = l.chit_id ' +
                     'LEFT JOIN chittr_user u ON c.chit_userid = u.user_id ' +
@@ -156,6 +156,7 @@ const getOne = (id, done) => {
                     // console.log(chits);
 
                     let to_return = {
+                        "user_id": user.user_id,
                         "given_name": user.user_givenname,
                         "family_name": user.user_familyname,
                         "email": user.user_email
@@ -166,6 +167,7 @@ const getOne = (id, done) => {
                     for(let chit of chits){
 
                         let temp = {
+                            "chit_id": chit["chit_id"],
                             "timestamp": Date.parse(chit["chit_timestamp"]),
                             "chit_content": chit["chit_content"]
                         };

@@ -1,7 +1,7 @@
 const   hashtags = require('../controllers/hashtag.server.controller'),
     auth = require('../lib/middleware');
 
-const BASE_URL = '/api/v0.0.4';
+const BASE_URL = '/api/v0.0.5';
 
 module.exports = function(app){
 

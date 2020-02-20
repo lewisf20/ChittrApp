@@ -17,11 +17,11 @@ module.exports = function(){
 
     app.use(morgan('tiny'));
 
-    app.get('/api/v0.0.4/', function(req, res){
+    app.get('/api/v0.0.5/', function(req, res){
         res.status(200).json({"msg": "Server up"});
     });
 
-    app.post('/api/v0.0.4/reset', function(req, res){
+    app.post('/api/v0.0.5/reset', function(req, res){
         console.log("h1");
         admin.database_reset(function(err){
             console.log("h2");

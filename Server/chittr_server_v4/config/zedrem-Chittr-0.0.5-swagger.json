@@ -1,7 +1,7 @@
 {
   "openapi" : "3.0.0",
   "info" : {
-    "version" : "0.0.4",
+    "version" : "0.0.5",
     "title" : "Chittr Microblogging Platorm",
     "description" : "Chittr is a totally original, unique and non-plagiarised platform for microblogging. Users who sign up for an account can publish ‘Chits’ – short, textual based posts of no more than 141 characters. Users can also follow their friends and peers to keep updated with what their friends are Chitting about.",
     "contact" : {
@@ -11,7 +11,7 @@
   },
   "servers" : [ {
     "description" : "Local server",
-    "url" : "https://localhost:3333/api/v0.0.4"
+    "url" : "https://localhost:3333/api/v0.0.5"
   } ],
   "paths" : {
     "/user" : {
@@ -160,7 +160,7 @@
         }
       }
     },
-    "/user/{id}/updatephoto" : {
+    "/user/{id}/photo" : {
       "get" : {
         "tags" : [ "User Management" ],
         "summary" : "get a users account photo",
@@ -194,7 +194,7 @@
         }
       }
     },
-    "/user/updatephoto" : {
+    "/user/photo" : {
       "post" : {
         "tags" : [ "User Management" ],
         "summary" : "Update a users account photo",
@@ -721,6 +721,9 @@
       "SingleChit" : {
         "type" : "object",
         "properties" : {
+          "chit_id" : {
+            "type" : "integer"
+          },
           "timestamp" : {
             "type" : "integer"
           },
