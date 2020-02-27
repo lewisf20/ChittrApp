@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Text, TextInput, View, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 
+import LoginResponse from '../models/LoginResponse';
+
 
 class Login extends Component {
     constructor(props) {
@@ -10,6 +12,10 @@ class Login extends Component {
         this.state = {
             email: '',
             password: '',
+            loginResponse: {
+                id: null,
+                token: null,
+            }
         };
         this.login = this.login.bind(this);
     }
@@ -36,15 +42,36 @@ class Login extends Component {
                     password: this.state.password
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log("status code: " + response.status);
+                //check response code, if okay return response else throw error
+                if(response.ok) {
+                    return response.json();
+                }
+                else {
+                    throw new Error('Response not OK');
+                  }
+                
+            })
             .then(response => {
                 //Response should now be in right format to use
                 console.log(response);
+
+                //get response values for id and token
+                var id = response["id"];
+                var token = response["token"];
+
+                //set state to these values
+                this.state.loginResponse.id = id;
+                this.state.loginResponse.token = token;
+
+                Alert.alert("Token", this.state.loginResponse.token);
             })
             .catch((error) => {
                 console.error(error);
             })
     }
+
 
 
 
