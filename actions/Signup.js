@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Text, TextInput, View, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 
-import LoginResponse from '../models/LoginResponse';
 
 
-class Login extends Component {
+
+class Signup extends Component {
     constructor(props) {
         super(props);
 
@@ -12,6 +12,8 @@ class Login extends Component {
         this.state = {
             email: '',
             password: '',
+            given_name: '',
+            family_name: '',
             loginResponse: {
                 id: null,
                 token: null,
@@ -45,13 +47,13 @@ class Login extends Component {
             .then(response => {
                 console.log("status code: " + response.status);
                 //check response code, if okay return response else throw error
-                if(response.ok) {
+                if (response.ok) {
                     return response.json();
                 }
                 else {
                     throw new Error('Response not OK');
-                  }
-                
+                }
+
             })
             .then(response => {
                 //Response should now be in right format to use
@@ -77,6 +79,7 @@ class Login extends Component {
 
     render() {
         return (
+            
             <View style={styles.screen}>
 
                 <TextInput
@@ -92,15 +95,29 @@ class Login extends Component {
                     onChangeText={(password) => this.setState({ password })}
                     value={this.state.password}
                 />
+                <TextInput
+                    style={styles.input}
+                    placeholder="first name..."
+                    onChangeText={(email) => this.setState({ given_name })}
+                    value={this.state.email}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="last name..."
+                    onChangeText={(email) => this.setState({ family_name })}
+                    value={this.state.email}
+                />
 
                 <TouchableOpacity
                     style={styles.button}
                     title="Log in"
-                    onPress={() => this.login()}
-                ><Text style={styles.btnText}>Log in</Text>
+                    onPress={() => this.signUp()}
+                >
+                    <Text style={styles.btnText}>Sign up</Text>
                 </TouchableOpacity>
 
             </View>
+
         );
     }
 
@@ -108,11 +125,13 @@ class Login extends Component {
 
 const styles = StyleSheet.create({
     screen: {
-        flex: 1,
-        backgroundColor: "#cbcbcb",
-        justifyContent: "center"
+        flex: .5,
+        justifyContent: "center",
+        backgroundColor: '#cbcbcb',
+        padding: 8
     },
     input: {
+        flex: 1,
         backgroundColor: "#fff",
         fontSize: 24,
         margin: 5,
@@ -126,8 +145,6 @@ const styles = StyleSheet.create({
         height: 50,
         alignSelf: "center",
         justifyContent: "center",
-        borderWidth: 3,
-        borderColor: "#fff",
 
     },
     btnText: {
@@ -143,4 +160,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Login; 
+export default Signup; 
