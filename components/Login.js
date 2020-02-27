@@ -21,8 +21,10 @@ class Login extends Component {
   "email": "LewisFrater@gmail.com",
   "password": "lewis1234"
 } */
-    login() {
-        return fetch('http://10.0.2.2:3333/api/v0.0.4/login',
+
+
+    async login() {
+        return fetch('http://10.0.2.2:3333/api/v0.0.5/login',
             {
                 method: 'POST',
                 headers: {
@@ -34,7 +36,9 @@ class Login extends Component {
                     password: this.state.password
                 })
             })
-            .then((response) => {
+            .then(response => response.json())
+            .then(response => {
+                //Response should now be in right format to use
                 console.log(response);
             })
             .catch((error) => {
@@ -42,10 +46,12 @@ class Login extends Component {
             })
     }
 
+
+
     render() {
         return (
             <View style={styles.screen}>
-                <Text style={styles.header}>Chittr Login</Text>
+
                 <TextInput
                     style={styles.input}
                     placeholder="email..."
@@ -77,6 +83,7 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         backgroundColor: "#cbcbcb",
+        justifyContent: "center"
     },
     input: {
         backgroundColor: "#fff",
