@@ -10,6 +10,7 @@ class Header extends React.Component {
         return (
             <View style={styles.header}>
                 <DrawerTrigger />
+                <Text style={styles.headerText}>Chittr</Text>
             </View>
         )
     }
@@ -18,7 +19,15 @@ class Header extends React.Component {
 const styles = StyleSheet.create({
     header: {
         padding: 10,
-        backgroundColor: 'royalblue'
+        backgroundColor: 'royalblue',
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    headerText: {
+        color: "#fff",
+        fontSize: 38,
+        alignSelf: "center",
+        textAlign: "center"
     }
 });
 

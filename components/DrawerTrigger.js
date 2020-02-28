@@ -17,7 +17,7 @@ class DrawerTrigger extends Component {
         return (
             <TouchableOpacity style={styles.trigger}
                 onPress={() => {
-                    this.props.navigation.dispatch(DrawerActions.openDrawer())
+                    this.props.navigation.dispatch(DrawerActions.toggleDrawer())
                 }}
             >
                 <Icon

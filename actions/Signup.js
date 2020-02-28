@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, Alert, Modal, TouchableHighlight, View, Text } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { StyleSheet, Alert, View, Text } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { useNavigation } from '@react-navigation/native';
 
 import Card from '../components/Card';
 import Input from '../components/Input';
 import Btn from '../components/Btn';
-import Header from '../components/Header';
 
 class Signup extends Component {
     constructor(props) {
@@ -23,15 +20,12 @@ class Signup extends Component {
                 id: null,
                 token: null,
             },
-            modalVisible: false
         };
         this.signup = this.signup.bind(this);
         this.login = this.login.bind(this);
     }
 
-    setModalVisible(visible) {
-        this.setState({ modalVisible: visible });
-    }
+
 
     /**{
   "given_name": "Lewis",
@@ -71,6 +65,7 @@ class Signup extends Component {
             .then(response => {
                 //Response should now be in right format to use
                 console.log(response);
+                //On successful signup, log the user in
                 this.login();
             })
             .catch((error) => {
@@ -114,7 +109,7 @@ class Signup extends Component {
                 this.state.loginResponse.id = id;
                 this.state.loginResponse.token = token;
 
-                this.setModalVisible(!this.state.modalVisible);
+
             })
             .catch((error) => {
                 console.error(error);
@@ -122,44 +117,14 @@ class Signup extends Component {
     }
 
 
-
-    GoToButton({ screenName }) {
-        const navigation = useNavigation();
-      
-        return (
-          <Btn
-            title={`Go to ${screenName}`}
-            onPress={() => navigation.navigate(screenName)}
-          />
-        );
-      }
-
-
     render() {
+        
+        const { navigate } = this.props.navigation;
+        
         return (
 
             <Card style={styles.screen}>
-                <Modal
-                    animationType="fade"
-                    transparent={false}
-                    visible={this.state.modalVisible}
-                    onRequestClose={() => {
-                        Alert.alert('Modal has been closed.');
-                    }}>
-                    
-                    <View style={styles.modalView}>
-                        <Card style={styles.modalCard}>
-                            <Text style={styles.successText}>Sign up successful!</Text>
-                            <this.GoToButton screenName="Home"/>
-                        </Card>
-                    </View>
-                </Modal>
-                <TouchableHighlight
-                    onPress={() => {
-                        this.setModalVisible(true);
-                    }}>
-                    <Text>Show Modal</Text>
-                </TouchableHighlight>
+
                 <Input
                     style={styles.input}
                     placeholder="email..."
