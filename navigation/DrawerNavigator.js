@@ -10,7 +10,7 @@ import AuthorisationScreen from '../screens/AuthorisationScreen';
 const DrawerNavigator = createDrawerNavigator({
     Home: Home,
     Profile: Profile,
-    Signup: AuthorisationScreen
+    Login: AuthorisationScreen
     
 });
 

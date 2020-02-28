@@ -117,7 +117,6 @@ const styles = StyleSheet.create({
     },
     button: {
         alignSelf: "center",
-        justifyContent: "center",
     },
     header: {
         textAlign: "center",
