@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { withNavigation } from 'react-navigation';
 
-//Pull screen name component
-import ScreenName from '../components/ScreenName.js';
+
 
 //bring in header 
 import Header from '../components/Header.js';
 
-export default class ScreenOne extends Component {
+class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,7 +23,7 @@ export default class ScreenOne extends Component {
       <React.Fragment>
         <Header />
         <View style={styles.container}>
-          <ScreenName name={'Home screen'} /* pass the prop */ />
+          <Text>Home</Text>
         </View>
       </React.Fragment>
     );
@@ -38,3 +38,4 @@ const styles = StyleSheet.create({
   }
 });
 
+export default withNavigation(Home);

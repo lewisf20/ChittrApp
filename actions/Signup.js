@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, Alert } from 'react-native';
+import { StyleSheet, Alert, Modal, TouchableHighlight, View, Text } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
+
 import Card from '../components/Card';
 import Input from '../components/Input';
 import Btn from '../components/Btn';
+import Header from '../components/Header';
 
 class Signup extends Component {
     constructor(props) {
@@ -17,12 +22,16 @@ class Signup extends Component {
             loginResponse: {
                 id: null,
                 token: null,
-            }
+            },
+            modalVisible: false
         };
         this.signup = this.signup.bind(this);
         this.login = this.login.bind(this);
     }
 
+    setModalVisible(visible) {
+        this.setState({ modalVisible: visible });
+    }
 
     /**{
   "given_name": "Lewis",
@@ -30,6 +39,7 @@ class Signup extends Component {
   "email": "LewisFrater@gmail.com",
   "password": "lewis1234"
 } */
+
 
 
     async signup() {
@@ -84,13 +94,13 @@ class Signup extends Component {
             .then(response => {
                 console.log("status code: " + response.status);
                 //check response code, if okay return response else throw error
-                if(response.ok) {
+                if (response.ok) {
                     return response.json();
                 }
                 else {
                     throw new Error('Response not OK');
-                  }
-                
+                }
+
             })
             .then(response => {
                 //Response should now be in right format to use
@@ -104,7 +114,7 @@ class Signup extends Component {
                 this.state.loginResponse.id = id;
                 this.state.loginResponse.token = token;
 
-                Alert.alert("Token", this.state.loginResponse.token);
+                this.setModalVisible(!this.state.modalVisible);
             })
             .catch((error) => {
                 console.error(error);
@@ -113,12 +123,43 @@ class Signup extends Component {
 
 
 
+    GoToButton({ screenName }) {
+        const navigation = useNavigation();
+      
+        return (
+          <Btn
+            title={`Go to ${screenName}`}
+            onPress={() => navigation.navigate(screenName)}
+          />
+        );
+      }
+
 
     render() {
         return (
-            
-            <Card style={styles.screen}>
 
+            <Card style={styles.screen}>
+                <Modal
+                    animationType="fade"
+                    transparent={false}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                    }}>
+                    
+                    <View style={styles.modalView}>
+                        <Card style={styles.modalCard}>
+                            <Text style={styles.successText}>Sign up successful!</Text>
+                            <this.GoToButton screenName="Home"/>
+                        </Card>
+                    </View>
+                </Modal>
+                <TouchableHighlight
+                    onPress={() => {
+                        this.setModalVisible(true);
+                    }}>
+                    <Text>Show Modal</Text>
+                </TouchableHighlight>
                 <Input
                     style={styles.input}
                     placeholder="email..."
@@ -144,7 +185,7 @@ class Signup extends Component {
                     onChangeText={(family_name) => this.setState({ family_name })}
                     value={this.state.family_name}
                 />
-                
+
 
                 <Btn
                     style={styles.button}
@@ -175,7 +216,27 @@ const styles = StyleSheet.create({
         textAlign: "center",
         color: "royalblue",
         fontSize: 44
+    },
+    modalView: {
+        flex: 1,
+        backgroundColor: "#fff",
+        justifyContent: "center"
+    },
+    modalCard: {
+        flex: .5,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    modalButton: {
+        alignSelf: "center",
+        width: 200
+    },
+    successText: {
+        fontSize: 48,
+        color: "royalblue",
+        fontWeight: "bold",
+        textAlign: "center"
     }
 });
 
-export default Signup; 
+export default withNavigation(Signup); 
