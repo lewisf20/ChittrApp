@@ -19,7 +19,7 @@ class Signup extends Component {
                 token: null,
             }
         };
-        this.login = this.login.bind(this);
+        this.signUp = this.signUp.bind(this);
     }
 
 
@@ -31,8 +31,8 @@ class Signup extends Component {
 } */
 
 
-    async login() {
-        return fetch('http://10.0.2.2:3333/api/v0.0.5/login',
+    async signUp() {
+        return fetch('http://10.0.2.2:3333/api/v0.0.5/user',
             {
                 method: 'POST',
                 headers: {
@@ -40,6 +40,8 @@ class Signup extends Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    given_name: this.state.given_name,
+                    family_name: this.state.family_name,
                     email: this.state.email,
                     password: this.state.password
                 })
@@ -58,16 +60,6 @@ class Signup extends Component {
             .then(response => {
                 //Response should now be in right format to use
                 console.log(response);
-
-                //get response values for id and token
-                var id = response["id"];
-                var token = response["token"];
-
-                //set state to these values
-                this.state.loginResponse.id = id;
-                this.state.loginResponse.token = token;
-
-                Alert.alert("Token", this.state.loginResponse.token);
             })
             .catch((error) => {
                 console.error(error);
@@ -98,14 +90,14 @@ class Signup extends Component {
                 <Input
                     style={styles.input}
                     placeholder="first name..."
-                    onChangeText={(email) => this.setState({ given_name })}
-                    value={this.state.email}
+                    onChangeText={(given_name) => this.setState({ given_name })}
+                    value={this.state.given_name}
                 />
                 <Input
                     style={styles.input}
                     placeholder="last name..."
-                    onChangeText={(email) => this.setState({ family_name })}
-                    value={this.state.email}
+                    onChangeText={(family_name) => this.setState({ family_name })}
+                    value={this.state.family_name}
                 />
                 
 
