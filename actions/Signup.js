@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Text, TextInput, View, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
-
-
-
+import Card from '../components/Card';
+import Input from '../components/Input';
+import Btn from '../components/Btn';
 
 class Signup extends Component {
     constructor(props) {
@@ -80,43 +80,43 @@ class Signup extends Component {
     render() {
         return (
             
-            <View style={styles.screen}>
+            <Card style={styles.screen}>
 
-                <TextInput
+                <Input
                     style={styles.input}
                     placeholder="email..."
                     onChangeText={(email) => this.setState({ email })}
                     value={this.state.email}
                 />
-                <TextInput
+                <Input
                     style={styles.input}
                     placeholder="password..."
                     secureTextEntry={true}
                     onChangeText={(password) => this.setState({ password })}
                     value={this.state.password}
                 />
-                <TextInput
+                <Input
                     style={styles.input}
                     placeholder="first name..."
                     onChangeText={(email) => this.setState({ given_name })}
                     value={this.state.email}
                 />
-                <TextInput
+                <Input
                     style={styles.input}
                     placeholder="last name..."
                     onChangeText={(email) => this.setState({ family_name })}
                     value={this.state.email}
                 />
+                
 
-                <TouchableOpacity
+                <Btn
                     style={styles.button}
-                    title="Log in"
+                    title="Sign Up"
                     onPress={() => this.signUp()}
-                >
-                    <Text style={styles.btnText}>Sign up</Text>
-                </TouchableOpacity>
 
-            </View>
+                />
+
+            </Card>
 
         );
     }
@@ -125,33 +125,16 @@ class Signup extends Component {
 
 const styles = StyleSheet.create({
     screen: {
-        flex: .5,
+        height: 400,
         justifyContent: "center",
-        backgroundColor: '#cbcbcb',
-        padding: 8
     },
     input: {
         flex: 1,
-        backgroundColor: "#fff",
-        fontSize: 24,
-        margin: 5,
-        textAlign: "center",
-        borderBottomWidth: 5,
-        borderColor: "skyblue"
     },
     button: {
-        backgroundColor: "skyblue",
-        width: "50%",
-        height: 50,
         alignSelf: "center",
         justifyContent: "center",
 
-    },
-    btnText: {
-        textAlign: "center",
-        color: "#fff",
-        fontSize: 28,
-        fontWeight: "bold",
     },
     header: {
         textAlign: "center",

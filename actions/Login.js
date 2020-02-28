@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Text, TextInput, View, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
-
+import Card from '../components/Card';
+import Input from '../components/Input';
+import Btn from '../components/Btn';
 
 
 class Login extends Component {
@@ -76,15 +78,15 @@ class Login extends Component {
 
     render() {
         return (
-            <View style={styles.screen}>
+            <Card style={styles.screen}>
 
-                <TextInput
+                <Input
                     style={styles.input}
                     placeholder="email..."
                     onChangeText={(email) => this.setState({ email })}
                     value={this.state.email}
                 />
-                <TextInput
+                <Input
                     style={styles.input}
                     placeholder="password..."
                     secureTextEntry={true}
@@ -92,14 +94,14 @@ class Login extends Component {
                     value={this.state.password}
                 />
 
-                <TouchableOpacity
+                <Btn
                     style={styles.button}
                     title="Log in"
                     onPress={() => this.login()}
-                ><Text style={styles.btnText}>Log in</Text>
-                </TouchableOpacity>
+                />
+                
 
-            </View>
+            </Card>
         );
     }
 
@@ -107,32 +109,15 @@ class Login extends Component {
 
 const styles = StyleSheet.create({
     screen: {
-        flex: .5,
-        backgroundColor: "#cbcbcb",
+        height: 300,
         justifyContent: "center",
-        padding: 8
     },
     input: {
-        backgroundColor: "#fff",
-        fontSize: 24,
-        margin: 5,
-        textAlign: "center",
-        borderBottomWidth: 5,
-        borderColor: "skyblue"
+        flex: 1,
     },
     button: {
-        backgroundColor: "skyblue",
-        width: "50%",
-        height: 50,
         alignSelf: "center",
         justifyContent: "center",
-
-    },
-    btnText: {
-        textAlign: "center",
-        color: "#fff",
-        fontSize: 28,
-        fontWeight: "bold",
     },
     header: {
         textAlign: "center",

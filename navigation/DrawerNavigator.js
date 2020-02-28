@@ -4,11 +4,14 @@ import { createDrawerNavigator } from 'react-navigation-drawer';
 
 import Home from '../screens/Home';
 import Profile from '../screens/Profile';
+import AuthorisationScreen from '../screens/AuthorisationScreen';
 
 
 const DrawerNavigator = createDrawerNavigator({
     Home: Home,
-    Profile: Profile
+    Profile: Profile,
+    Signup: AuthorisationScreen
+    
 });
 
 export default DrawerNavigator;
