@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TextInput, View, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, Alert } from 'react-native';
 import Card from '../components/Card';
 import Input from '../components/Input';
 import Btn from '../components/Btn';
