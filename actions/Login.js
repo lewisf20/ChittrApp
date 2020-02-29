@@ -1,36 +1,17 @@
-import React, { Component } from 'react';
-import { StyleSheet, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text } from 'react-native';
 import Card from '../components/Card';
 import Input from '../components/Input';
 import Btn from '../components/Btn';
 
 
-class Login extends Component {
-    constructor(props) {
-        super(props);
+const Login = props =>  {
 
-        //components state
-        this.state = {
-            email: '',
-            password: '',
-            loginResponse: {
-                id: null,
-                token: null,
-            }
-        };
-        this.login = this.login.bind(this);
-    }
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [token, setToken] = useState('None Set');
 
-
-    /**{
-  "given_name": "Lewis",
-  "family_name": "Frater",
-  "email": "LewisFrater@gmail.com",
-  "password": "lewis1234"
-} */
-
-
-    async login() {
+    async function login() {
         return fetch('http://10.0.2.2:3333/api/v0.0.5/login',
             {
                 method: 'POST',
@@ -39,8 +20,8 @@ class Login extends Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    email: this.state.email,
-                    password: this.state.password
+                    email: email,
+                    password: password
                 })
             })
             .then(response => {
@@ -60,13 +41,12 @@ class Login extends Component {
 
                 //get response values for id and token
                 var id = response["id"];
-                var token = response["token"];
+                var respToken = response["token"];
 
-                //set state to these values
-                this.state.loginResponse.id = id;
-                this.state.loginResponse.token = token;
+                //set token state to these values
+                setToken(respToken);
 
-                Alert.alert("Token", this.state.loginResponse.token);
+                
             })
             .catch((error) => {
                 console.error(error);
@@ -76,34 +56,34 @@ class Login extends Component {
 
 
 
-    render() {
+    
         return (
             <Card style={styles.screen}>
-
+                <Text>Token = {token}</Text>
                 <Input
                     style={styles.input}
                     placeholder="email..."
-                    onChangeText={(email) => this.setState({ email })}
-                    value={this.state.email}
+                    onChangeText={(email) => setEmail(email)}
+                    value={email}
                 />
                 <Input
                     style={styles.input}
                     placeholder="password..."
                     secureTextEntry={true}
-                    onChangeText={(password) => this.setState({ password })}
-                    value={this.state.password}
+                    onChangeText={(password) => setPassword(password)}
+                    value={password}
                 />
 
                 <Btn
                     style={styles.button}
                     title="Log in"
-                    onPress={() => this.login()}
+                    onPress={() => login()}
                 />
                 
 
             </Card>
         );
-    }
+    
 
 }
 

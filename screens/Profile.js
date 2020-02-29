@@ -6,27 +6,17 @@ import { withNavigation } from 'react-navigation';
 //bring in header 
 import Header from '../components/Header.js';
 
-class Profile extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
+const Profile = props => {
 
-  static navigationOptions = {
+  return (
+    <React.Fragment>
+      <Header />
+      <View style={styles.container}>
+        <Text>Profile</Text>
+      </View>
+    </React.Fragment>
+  );
 
-  };
-
-  render() {
-    return (
-      <React.Fragment>
-        <Header />
-        <View style={styles.container}>
-          <Text>Profile</Text>
-        </View>
-      </React.Fragment>
-    );
-  }
 }
 
 const styles = StyleSheet.create({
