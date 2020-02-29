@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import { View, Text, StyleSheet, Modal } from 'react-native';
+import { View, Text, StyleSheet, Modal, Alert } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
 
@@ -31,6 +31,10 @@ const Home = props => {
   const [givenName, setGivenName] = useState('');
   const [familyName, setFamilyName] = useState('');
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+
+  //Content of the login modal
   let loginModalContent =
     <Modal
       animationType="slide"
@@ -66,6 +70,7 @@ const Home = props => {
       </Card>
     </Modal>;
 
+  //Content of the signup modal
   let signUpModalContent =
     <Modal
       animationType="slide"
@@ -102,8 +107,6 @@ const Home = props => {
           onChangeText={(familyName) => setFamilyName(familyName)}
           value={familyName}
         />
-
-
         <Btn
           style={styles.cardButton}
           title="Sign Up"
@@ -169,13 +172,13 @@ const Home = props => {
         var id = response["id"];
         var respToken = response["token"];
 
-        //set token state to these values
-        setToken(respToken);
 
+
+        networkSuccessHandler(respToken);
 
       })
       .catch((error) => {
-        console.error(error);
+        networkErrorHandler();
       })
   }
 
@@ -215,6 +218,38 @@ const Home = props => {
       .catch((error) => {
         console.error(error);
       })
+  }
+
+  //Network error handler
+  function networkErrorHandler() {
+    Alert.alert(
+      "Error",
+      "Email or Password incorrect.",
+      [
+        { text: "Okay", onPress: () => { setLogInVisible(false); setSignUpVisible(false); } }
+      ]
+    );
+  }
+
+  //Login success handler
+  function networkSuccessHandler(token) {
+    Alert.alert(
+      "Log in Success",
+      "Your email: " + email + "\nYour token: " + token,
+      [
+        {
+          text: "Okay", onPress: () => {
+            setLogInVisible(false);
+            setSignUpVisible(false);
+
+            //set token state to these values
+            setToken(token);
+            //Set logged in to true
+            setIsLoggedIn(true);
+          }
+        }
+      ]
+    );
   }
 
 

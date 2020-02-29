@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 
 import AppNavigator from './navigation/AppNavigator';
-import Signup from './actions/Signup';
-import Login from './actions/Login';
 
 
 
