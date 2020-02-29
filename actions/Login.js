@@ -118,11 +118,6 @@ const styles = StyleSheet.create({
     button: {
         alignSelf: "center",
     },
-    header: {
-        textAlign: "center",
-        color: "royalblue",
-        fontSize: 44
-    }
 });
 
 export default Login; 

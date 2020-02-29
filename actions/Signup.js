@@ -177,31 +177,6 @@ const styles = StyleSheet.create({
     button: {
         alignSelf: "center",
     },
-    header: {
-        textAlign: "center",
-        color: "royalblue",
-        fontSize: 44
-    },
-    modalView: {
-        flex: 1,
-        backgroundColor: "#fff",
-        justifyContent: "center"
-    },
-    modalCard: {
-        flex: .5,
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    modalButton: {
-        alignSelf: "center",
-        width: 200
-    },
-    successText: {
-        fontSize: 48,
-        color: "royalblue",
-        fontWeight: "bold",
-        textAlign: "center"
-    }
 });
 
 export default withNavigation(Signup); 

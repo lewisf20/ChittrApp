@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text } from 'react-native';
+import Colors from '../constants/Colors';
 
 //Get props
 const Btn = ({ ...props }) => {
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
     button: {
         width: "50%",
         height: 50,
-        backgroundColor: "royalblue",
+        backgroundColor: Colors.primary,
         fontSize: 24,
         margin: 5,
         textAlign: "center",
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
     },
     btnText: {
         textAlign: "center",
-        color: "#fff",
+        color: Colors.compliment,
         fontSize: 28,
         fontWeight: "bold",
     }

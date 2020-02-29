@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import Colors from '../constants/Colors';
 
 // pull in from DrawerTrigger.js
 import DrawerTrigger from './DrawerTrigger'
@@ -19,12 +20,12 @@ class Header extends React.Component {
 const styles = StyleSheet.create({
     header: {
         padding: 10,
-        backgroundColor: 'royalblue',
+        backgroundColor: Colors.primary,
         flexDirection: "row",
         justifyContent: "space-between"
     },
     headerText: {
-        color: "#fff",
+        color: Colors.compliment,
         fontSize: 38,
         alignSelf: "center",
         textAlign: "center"

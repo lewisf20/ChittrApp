@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, TextInput } from 'react-native';
+import Colors from '../constants/Colors';
 
 //Get props
 const Input = ({ ...props }) => {
@@ -15,12 +16,12 @@ const Input = ({ ...props }) => {
 
 const styles = StyleSheet.create({
     input: {
-        backgroundColor: "#fff",
+        backgroundColor: Colors.compliment,
         fontSize: 24,
         margin: 5,
         textAlign: "center",
         borderBottomWidth: 5,
-        borderColor: "royalblue"
+        borderColor: Colors.primary
     }
 });
 
