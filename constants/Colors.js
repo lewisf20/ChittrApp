@@ -2,5 +2,6 @@
 // so every color can be changed easilly
 export default {
     primary: "royalblue",
-    compliment: "#fff"
+    compliment: "#fff",
+    cancel: "red"
 };

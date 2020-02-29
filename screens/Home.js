@@ -18,7 +18,7 @@ import Input from '../components/Input';
 
 const Home = props => {
 
-  //Manage state
+  //###################### MANAGE STATE #######################
 
   //Manage whether modals are visible
   const [logInVisible, setLogInVisible] = useState(false);
@@ -27,12 +27,15 @@ const Home = props => {
   //Manage user login and signup data
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
   const [token, setToken] = useState('None Set');
   const [givenName, setGivenName] = useState('');
   const [familyName, setFamilyName] = useState('');
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+
+  //#################### MODAL CONTENT ############################
 
   //Content of the login modal
   let loginModalContent =
@@ -45,7 +48,7 @@ const Home = props => {
       }}
     >
       <Card style={styles.card}>
-        <Text>Token = {token}</Text>
+        <Text style={styles.titleText}>Chittr</Text>
         <Input
           style={styles.cardInput}
           placeholder="email..."
@@ -67,6 +70,11 @@ const Home = props => {
             login();
           }}
         />
+        <Btn
+          style={{...styles.cardButton, backgroundColor: Colors.cancel}}
+          title="Cancel"
+          onPress={() => setLogInVisible(!logInVisible)}
+        />
       </Card>
     </Modal>;
 
@@ -81,7 +89,7 @@ const Home = props => {
       }}
     >
       <Card style={styles.card}>
-
+        <Text style={styles.titleText}>Chittr</Text>
         <Input
           style={styles.cardInput}
           placeholder="email..."
@@ -94,6 +102,13 @@ const Home = props => {
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
           value={password}
+        />
+        <Input
+          style={styles.cardInput}
+          placeholder="repeat password..."
+          secureTextEntry={true}
+          onChangeText={(repeatPassword) => setRepeatPassword(repeatPassword)}
+          value={repeatPassword}
         />
         <Input
           style={styles.cardInput}
@@ -111,22 +126,40 @@ const Home = props => {
           style={styles.cardButton}
           title="Sign Up"
           onPress={() => {
-            signup();
-          }}
+            //Check if passwords match
+            if (password !== repeatPassword) {
+              Alert.alert("Passwords do not match!");
+              //Clear password input fields by resetting state
+              setPassword('');
+              setRepeatPassword('');
+            } else {
+              signup();
+            }
 
+          }}
+        />
+        <Btn
+          style={{...styles.cardButton, backgroundColor: Colors.cancel}}
+          title="Cancel"
+          onPress={() => setSignUpVisible(!signUpVisible)}
         />
 
       </Card>
     </Modal>;
 
+  //#######################################################################
+  //###################### RETURN #########################################
   return (
 
     <View style={styles.screen}>
       <Header />
       {loginModalContent}
       {signUpModalContent}
+      <View style={styles.welcomeContainer}>
+        <Text style={styles.welcomeText}>Welcome{" " + email}!</Text>
+      </View>
       <View style={styles.mainContainer}>
-        <Text>Home</Text>
+
       </View>
       <View style={styles.bottomContainer}>
         <View style={styles.buttonContainer}>
@@ -137,7 +170,8 @@ const Home = props => {
     </View>
 
   );
-
+  //#########################################################################
+  //#################### NETWORK FUNCTIONS ################################## 
 
   //Login function
   async function login() {
@@ -160,7 +194,7 @@ const Home = props => {
           return response.json();
         }
         else {
-          throw new Error('Response not OK');
+          networkErrorHandler();
         }
 
       })
@@ -169,15 +203,14 @@ const Home = props => {
         console.log(response);
 
         //get response values for id and token
-        var id = response["id"];
         var respToken = response["token"];
 
-
-
+        //Handle the login - set required state etc
         networkSuccessHandler(respToken);
 
       })
       .catch((error) => {
+        //Handle a network error or wrong credential
         networkErrorHandler();
       })
   }
@@ -212,6 +245,7 @@ const Home = props => {
       .then(response => {
         //Response should now be in right format to use
         console.log(response);
+        Alert.alert("Signup Success");
         //On successful signup, log the user in
         login();
       })
@@ -273,14 +307,31 @@ const styles = StyleSheet.create({
     width: "35%"
   },
   card: {
-    height: 300,
+    flex: 1,
     justifyContent: "center",
   },
   cardButton: {
     alignSelf: "center",
   },
   cardInput: {
-    flex: 1,
+
+  },
+  titleText: {
+    color: Colors.primary,
+    textAlign: "center",
+    fontSize: 52,
+    paddingRight: 10
+  },
+  welcomeContainer: {
+    padding: 8,
+    backgroundColor: Colors.primary,
+    borderTopWidth: 5,
+    borderTopColor: Colors.compliment
+  },
+  welcomeText: {
+    color: Colors.compliment,
+    textAlign: "center",
+    fontSize: 24,
   }
 });
 
