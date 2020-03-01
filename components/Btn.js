@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         margin: 5,
         textAlign: "center",
-        borderRadius: 8,
+        borderRadius: 35,
         justifyContent: "center",
     },
     btnText: {

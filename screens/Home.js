@@ -6,7 +6,7 @@ import { withNavigation } from 'react-navigation';
 
 
 
-//bring in header 
+//bring in custom components
 import Header from '../components/Header';
 import Colors from '../constants/Colors';
 import Btn from '../components/Btn';
@@ -157,6 +157,12 @@ const Home = props => {
       {signUpModalContent}
       <View style={styles.welcomeContainer}>
         <Text style={styles.welcomeText}>Welcome{" " + email}!</Text>
+        <Btn 
+        title="Go to user screen"
+        style={styles.cardButton}
+        onPress={() => {
+          props.navigation.navigate("User");
+        }} />
       </View>
       <View style={styles.mainContainer}>
 
@@ -301,7 +307,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    borderWidth: 2
+    borderTopWidth: 1,
+    borderColor: Colors.primary
   },
   button: {
     width: "35%"

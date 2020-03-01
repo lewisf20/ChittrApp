@@ -6,13 +6,13 @@ import { withNavigation } from 'react-navigation';
 //bring in header 
 import Header from '../components/Header.js';
 
-const Profile = props => {
+const MyAccount = props => {
 
   return (
     <React.Fragment>
       <Header />
       <View style={styles.container}>
-        <Text>Profile</Text>
+        <Text>My account screen</Text>
       </View>
     </React.Fragment>
   );
@@ -27,4 +27,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default withNavigation(Profile);
+export default MyAccount;
