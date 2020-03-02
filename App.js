@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
 
-import AppNavigator from './navigation/AppNavigator';
 import MainNavigation from './navigation/MainNavigation';
 
 export default function App() {

@@ -3,7 +3,6 @@ import {View, Text, StyleSheet, Modal, Alert} from 'react-native';
 import {withNavigation} from 'react-navigation';
 
 //bring in custom components
-import Header from '../components/Header';
 import Colors from '../constants/Colors';
 import Btn from '../components/Btn';
 import Card from '../components/Card';
@@ -146,7 +145,6 @@ const Home = props => {
   //###################### RETURN #########################################
   return (
     <View style={styles.screen}>
-      <Header />
       {loginModalContent}
       {signUpModalContent}
       <View style={styles.welcomeContainer}>
