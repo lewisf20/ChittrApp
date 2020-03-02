@@ -14,14 +14,16 @@ const Btn = ({...props}) => {
 
 const styles = StyleSheet.create({
   button: {
-    width: '50%',
     height: 50,
+    minWidth: '35%',
     backgroundColor: Colors.primary,
     fontSize: 24,
     margin: 5,
     textAlign: 'center',
     borderRadius: 35,
     justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 5,
   },
   btnText: {
     textAlign: 'center',

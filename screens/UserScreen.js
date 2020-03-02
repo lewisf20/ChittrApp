@@ -10,8 +10,8 @@ import {View, Text, StyleSheet} from 'react-native';
 
 const UserScreen = props => {
   return (
-    <View>
-      <Text style={styles.container}> User screen </Text>
+    <View style={styles.container}>
+      <Text> User screen </Text>
     </View>
   );
 };

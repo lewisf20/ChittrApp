@@ -1,6 +1,8 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
+//import components
+import Btn from '../components/Btn';
 /*
     This screen will have a search input to search for other users.
     Upon searching a list of users will be returned if that search string
@@ -9,12 +11,24 @@ import {View, Text, StyleSheet} from 'react-native';
 
 const SearchUserScreen = props => {
   return (
-    <View>
+    <View style={styles.container}>
       <Text> Search Users Screen </Text>
+      <Btn
+        title="User Screen"
+        onPress={() => {
+          props.navigation.navigate('User');
+        }}
+      />
     </View>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 
 export default SearchUserScreen;

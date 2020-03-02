@@ -148,14 +148,16 @@ const Home = props => {
       {loginModalContent}
       {signUpModalContent}
       <View style={styles.welcomeContainer}>
-        <Text style={styles.welcomeText}>Welcome{' ' + email}!</Text>
-        <Btn
-          title="Go to user screen"
-          style={styles.cardButton}
-          onPress={() => {
-            props.navigation.navigate('User');
-          }}
-        />
+        <Card>
+          <Text style={styles.welcomeText}>Welcome{' ' + email}!</Text>
+          <Btn
+            title="UserScreen"
+            style={styles.cardButton}
+            onPress={() => {
+              props.navigation.navigate('User');
+            }}
+          />
+        </Card>
       </View>
       <View style={styles.mainContainer}></View>
       <View style={styles.bottomContainer}>
@@ -320,12 +322,11 @@ const styles = StyleSheet.create({
   },
   welcomeContainer: {
     padding: 8,
-    backgroundColor: Colors.primary,
     borderTopWidth: 5,
     borderTopColor: Colors.compliment,
   },
   welcomeText: {
-    color: Colors.compliment,
+    color: Colors.primary,
     textAlign: 'center',
     fontSize: 24,
   },
