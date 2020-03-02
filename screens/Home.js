@@ -1,6 +1,13 @@
-import React, {Component, useState} from 'react';
-import {View, Text, StyleSheet, Modal, Alert} from 'react-native';
-import {withNavigation} from 'react-navigation';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Modal,
+  Alert,
+  FlatList,
+  ScrollView,
+} from 'react-native';
 
 //bring in custom components
 import Colors from '../constants/Colors';
@@ -30,6 +37,12 @@ const Home = props => {
   const [familyName, setFamilyName] = useState('');
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  //State to hold chits
+  const [chitData, setChitData] = useState([]);
+
+  useEffect(() => {
+    getChits();
+  });
 
   //#################### MODAL CONTENT ############################
 
@@ -141,10 +154,16 @@ const Home = props => {
     </Modal>
   );
 
+  const renderChitItem = itemData => (
+    <Card>
+      <Text>{itemData.item.chit_content}</Text>
+    </Card>
+  );
+
   //#######################################################################
   //###################### RETURN #########################################
   return (
-    <View style={styles.screen}>
+    <ScrollView style={styles.screen}>
       {loginModalContent}
       {signUpModalContent}
       <View style={styles.welcomeContainer}>
@@ -158,24 +177,35 @@ const Home = props => {
             }}
           />
         </Card>
+        <Card>
+          <Text style={styles.welcomeText}>Chits</Text>
+
+          <FlatList
+            keyExtractor={item => item.chit_id.toString()}
+            data={chitData}
+            renderItem={renderChitItem}
+          />
+        </Card>
       </View>
-      <View style={styles.mainContainer}></View>
-      <View style={styles.bottomContainer}>
-        <View style={styles.buttonContainer}>
-          <Btn
-            title="Log in"
-            style={styles.button}
-            onPress={() => setLogInVisible(true)}
-          />
-          <Btn
-            title="Sign up"
-            style={styles.button}
-            onPress={() => setSignUpVisible(true)}
-          />
+      <View style={styles.mainContainer}>
+        <View style={styles.bottomContainer}>
+          <View style={styles.buttonContainer}>
+            <Btn
+              title="Log in"
+              style={styles.button}
+              onPress={() => setLogInVisible(true)}
+            />
+            <Btn
+              title="Sign up"
+              style={styles.button}
+              onPress={() => setSignUpVisible(true)}
+            />
+          </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
+
   //#########################################################################
   //#################### NETWORK FUNCTIONS ##################################
 
@@ -247,6 +277,43 @@ const Home = props => {
         Alert.alert('Signup Success');
         //On successful signup, log the user in
         login();
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  async function getChits() {
+    var headers = {};
+    isLoggedIn
+      ? (headers = {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'X-Authorization': token,
+        })
+      : (headers = {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        });
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/chits', {
+      method: 'GET',
+      headers: headers,
+    })
+      .then(response => {
+        console.log('status code: ' + response.status);
+        //check response code, if okay return response else throw error
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Response not OK');
+        }
+      })
+      .then(response => {
+        //Response should now be in right format to use
+        console.log(response);
+        console.log('Tester = ');
+        setChitData(response);
+        //console.log('chitData = ' + chitData[4].chit_content);
       })
       .catch(error => {
         console.error(error);
@@ -330,6 +397,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 24,
   },
+  listContainer: {
+    flex: 1,
+    width: '100%',
+    height: 300,
+    backgroundColor: 'red',
+  },
+  list: {
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
 });
 
-export default withNavigation(Home);
+export default Home;
