@@ -1,10 +1,6 @@
-import React, { Component, useState } from 'react';
-import { View, Text, StyleSheet, Modal, Alert } from 'react-native';
-import { withNavigation } from 'react-navigation';
-
-
-
-
+import React, {Component, useState} from 'react';
+import {View, Text, StyleSheet, Modal, Alert} from 'react-native';
+import {withNavigation} from 'react-navigation';
 
 //bring in custom components
 import Header from '../components/Header';
@@ -13,11 +9,7 @@ import Btn from '../components/Btn';
 import Card from '../components/Card';
 import Input from '../components/Input';
 
-
-
-
 const Home = props => {
-
   //###################### MANAGE STATE #######################
 
   //Manage whether modals are visible
@@ -34,32 +26,30 @@ const Home = props => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-
   //#################### MODAL CONTENT ############################
 
   //Content of the login modal
-  let loginModalContent =
+  let loginModalContent = (
     <Modal
       animationType="slide"
       transparent={false}
       visible={logInVisible}
       onRequestClose={() => {
-        setLogInVisible(!logInVisible)
-      }}
-    >
+        setLogInVisible(!logInVisible);
+      }}>
       <Card style={styles.card}>
         <Text style={styles.titleText}>Chittr</Text>
         <Input
           style={styles.cardInput}
           placeholder="email..."
-          onChangeText={(email) => setEmail(email)}
+          onChangeText={email => setEmail(email)}
           value={email}
         />
         <Input
           style={styles.cardInput}
           placeholder="password..."
           secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
+          onChangeText={password => setPassword(password)}
           value={password}
         />
 
@@ -76,50 +66,50 @@ const Home = props => {
           onPress={() => setLogInVisible(!logInVisible)}
         />
       </Card>
-    </Modal>;
+    </Modal>
+  );
 
   //Content of the signup modal
-  let signUpModalContent =
+  let signUpModalContent = (
     <Modal
       animationType="slide"
       transparent={false}
       visible={signUpVisible}
       onRequestClose={() => {
-        setSignUpVisible(!signUpVisible)
-      }}
-    >
+        setSignUpVisible(!signUpVisible);
+      }}>
       <Card style={styles.card}>
         <Text style={styles.titleText}>Chittr</Text>
         <Input
           style={styles.cardInput}
           placeholder="email..."
-          onChangeText={(email) => setEmail(email)}
+          onChangeText={email => setEmail(email)}
           value={email}
         />
         <Input
           style={styles.cardInput}
           placeholder="password..."
           secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
+          onChangeText={password => setPassword(password)}
           value={password}
         />
         <Input
           style={styles.cardInput}
           placeholder="repeat password..."
           secureTextEntry={true}
-          onChangeText={(repeatPassword) => setRepeatPassword(repeatPassword)}
+          onChangeText={repeatPassword => setRepeatPassword(repeatPassword)}
           value={repeatPassword}
         />
         <Input
           style={styles.cardInput}
           placeholder="first name..."
-          onChangeText={(givenName) => setGivenName(givenName)}
+          onChangeText={givenName => setGivenName(givenName)}
           value={givenName}
         />
         <Input
           style={styles.cardInput}
           placeholder="last name..."
-          onChangeText={(familyName) => setFamilyName(familyName)}
+          onChangeText={familyName => setFamilyName(familyName)}
           value={familyName}
         />
         <Btn
@@ -128,14 +118,13 @@ const Home = props => {
           onPress={() => {
             //Check if passwords match
             if (password !== repeatPassword) {
-              Alert.alert("Passwords do not match!");
+              Alert.alert('Passwords do not match!');
               //Clear password input fields by resetting state
               setPassword('');
               setRepeatPassword('');
             } else {
               signup();
             }
-
           }}
         />
         <Btn
@@ -143,142 +132,143 @@ const Home = props => {
           title="Cancel"
           onPress={() => setSignUpVisible(!signUpVisible)}
         />
-
       </Card>
-    </Modal>;
+    </Modal>
+  );
 
   //#######################################################################
   //###################### RETURN #########################################
   return (
-
     <View style={styles.screen}>
       <Header />
       {loginModalContent}
       {signUpModalContent}
       <View style={styles.welcomeContainer}>
-        <Text style={styles.welcomeText}>Welcome{" " + email}!</Text>
-        <Btn 
-        title="Go to user screen"
-        style={styles.cardButton}
-        onPress={() => {
-          props.navigation.navigate("User");
-        }} />
+        <Text style={styles.welcomeText}>Welcome{' ' + email}!</Text>
+        <Btn
+          title="Go to user screen"
+          style={styles.cardButton}
+          onPress={() => {
+            props.navigation.navigate('User');
+          }}
+        />
       </View>
-      <View style={styles.mainContainer}>
-
-      </View>
+      <View style={styles.mainContainer}></View>
       <View style={styles.bottomContainer}>
         <View style={styles.buttonContainer}>
-          <Btn title="Log in" style={styles.button} onPress={() => setLogInVisible(true)} />
-          <Btn title="Sign up" style={styles.button} onPress={() => setSignUpVisible(true)} />
+          <Btn
+            title="Log in"
+            style={styles.button}
+            onPress={() => setLogInVisible(true)}
+          />
+          <Btn
+            title="Sign up"
+            style={styles.button}
+            onPress={() => setSignUpVisible(true)}
+          />
         </View>
       </View>
     </View>
-
   );
   //#########################################################################
-  //#################### NETWORK FUNCTIONS ################################## 
+  //#################### NETWORK FUNCTIONS ##################################
 
   //Login function
   async function login() {
-    return fetch('http://10.0.2.2:3333/api/v0.0.5/login',
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password
-        })
-      })
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/login', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    })
       .then(response => {
-        console.log("status code: " + response.status);
+        console.log('status code: ' + response.status);
         //check response code, if okay return response else throw error
         if (response.ok) {
           return response.json();
-        }
-        else {
+        } else {
           networkErrorHandler();
         }
-
       })
       .then(response => {
         //Response should now be in right format to use
         console.log(response);
 
         //get response values for id and token
-        var respToken = response["token"];
+        var respToken = response['token'];
 
         //Handle the login - set required state etc
         networkSuccessHandler(respToken);
-
       })
-      .catch((error) => {
+      .catch(error => {
         //Handle a network error or wrong credential
         networkErrorHandler();
-      })
+      });
   }
 
   //Signup function
   async function signup() {
-    return fetch('http://10.0.2.2:3333/api/v0.0.5/user',
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          given_name: givenName,
-          family_name: familyName,
-          email: email,
-          password: password
-        })
-      })
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/user', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        given_name: givenName,
+        family_name: familyName,
+        email: email,
+        password: password,
+      }),
+    })
       .then(response => {
-        console.log("status code: " + response.status);
+        console.log('status code: ' + response.status);
         //check response code, if okay return response else throw error
         if (response.ok) {
           return response.json();
-        }
-        else {
+        } else {
           throw new Error('Response not OK');
         }
-
       })
       .then(response => {
         //Response should now be in right format to use
         console.log(response);
-        Alert.alert("Signup Success");
+        Alert.alert('Signup Success');
         //On successful signup, log the user in
         login();
       })
-      .catch((error) => {
+      .catch(error => {
         console.error(error);
-      })
+      });
   }
 
   //Network error handler
   function networkErrorHandler() {
-    Alert.alert(
-      "Error",
-      "Email or Password incorrect.",
-      [
-        { text: "Okay", onPress: () => { setLogInVisible(false); setSignUpVisible(false); } }
-      ]
-    );
+    Alert.alert('Error', 'Email or Password incorrect.', [
+      {
+        text: 'Okay',
+        onPress: () => {
+          setLogInVisible(false);
+          setSignUpVisible(false);
+        },
+      },
+    ]);
   }
 
   //Login success handler
   function networkSuccessHandler(token) {
     Alert.alert(
-      "Log in Success",
-      "Your email: " + email + "\nYour token: " + token,
+      'Log in Success',
+      'Your email: ' + email + '\nYour token: ' + token,
       [
         {
-          text: "Okay", onPress: () => {
+          text: 'Okay',
+          onPress: () => {
             setLogInVisible(false);
             setSignUpVisible(false);
 
@@ -286,14 +276,12 @@ const Home = props => {
             setToken(token);
             //Set logged in to true
             setIsLoggedIn(true);
-          }
-        }
-      ]
+          },
+        },
+      ],
     );
   }
-
-
-}
+};
 
 const styles = StyleSheet.create({
   screen: {
@@ -301,45 +289,42 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     flex: 1,
-    justifyContent: "flex-end",
-
+    justifyContent: 'flex-end',
   },
   buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     borderTopWidth: 1,
-    borderColor: Colors.primary
+    borderColor: Colors.primary,
   },
   button: {
-    width: "35%"
+    width: '35%',
   },
   card: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   cardButton: {
-    alignSelf: "center",
+    alignSelf: 'center',
   },
-  cardInput: {
-
-  },
+  cardInput: {},
   titleText: {
     color: Colors.primary,
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 52,
-    paddingRight: 10
+    paddingRight: 10,
   },
   welcomeContainer: {
     padding: 8,
     backgroundColor: Colors.primary,
     borderTopWidth: 5,
-    borderTopColor: Colors.compliment
+    borderTopColor: Colors.compliment,
   },
   welcomeText: {
     color: Colors.compliment,
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 24,
-  }
+  },
 });
 
 export default withNavigation(Home);
