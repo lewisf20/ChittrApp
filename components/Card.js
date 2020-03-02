@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.compliment,
     padding: 15,
-    elevation: 35,
     borderRadius: 15,
     margin: 8,
   },

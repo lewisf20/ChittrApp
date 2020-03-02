@@ -14,6 +14,7 @@ import Colors from '../constants/Colors';
 import Btn from '../components/Btn';
 import Card from '../components/Card';
 import Input from '../components/Input';
+import ChitItem from '../components/ChitItem';
 
 /*
   This is the Home screen, where chits are loaded into a list, also user should 
@@ -40,9 +41,10 @@ const Home = props => {
   //State to hold chits
   const [chitData, setChitData] = useState([]);
 
+  //run get chits once
   useEffect(() => {
     getChits();
-  });
+  }, []);
 
   //#################### MODAL CONTENT ############################
 
@@ -154,11 +156,32 @@ const Home = props => {
     </Modal>
   );
 
-  const renderChitItem = itemData => (
-    <Card>
-      <Text>{itemData.item.chit_content}</Text>
-    </Card>
-  );
+  const renderChitItem = itemData => <ChitItem item={itemData.item} />;
+
+  let buttonContent;
+
+  if (!isLoggedIn) {
+    buttonContent = (
+      <View style={styles.buttonContainer}>
+        <Btn
+          title="Log in"
+          style={styles.button}
+          onPress={() => setLogInVisible(true)}
+        />
+        <Btn
+          title="Sign up"
+          style={styles.button}
+          onPress={() => setSignUpVisible(true)}
+        />
+      </View>
+    );
+  } else {
+    buttonContent = (
+      <View style={styles.buttonContainer}>
+        <Btn title="Log out" style={styles.button} onPress={() => logout()} />
+      </View>
+    );
+  }
 
   //#######################################################################
   //###################### RETURN #########################################
@@ -177,6 +200,7 @@ const Home = props => {
             }}
           />
         </Card>
+        {buttonContent}
         <Card>
           <Text style={styles.welcomeText}>Chits</Text>
 
@@ -186,22 +210,6 @@ const Home = props => {
             renderItem={renderChitItem}
           />
         </Card>
-      </View>
-      <View style={styles.mainContainer}>
-        <View style={styles.bottomContainer}>
-          <View style={styles.buttonContainer}>
-            <Btn
-              title="Log in"
-              style={styles.button}
-              onPress={() => setLogInVisible(true)}
-            />
-            <Btn
-              title="Sign up"
-              style={styles.button}
-              onPress={() => setSignUpVisible(true)}
-            />
-          </View>
-        </View>
       </View>
     </ScrollView>
   );
@@ -226,6 +234,7 @@ const Home = props => {
         console.log('status code: ' + response.status);
         //check response code, if okay return response else throw error
         if (response.ok) {
+          getChits();
           return response.json();
         } else {
           networkErrorHandler();
@@ -244,6 +253,33 @@ const Home = props => {
       .catch(error => {
         //Handle a network error or wrong credential
         networkErrorHandler();
+      });
+  }
+
+  async function logout() {
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/logout', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Authorization': token,
+      },
+    })
+      .then(response => {
+        console.log('status code: ' + response.status);
+        //check response code, if okay return response else throw error
+        if (response.ok) {
+          setIsLoggedIn(false);
+          setToken('');
+          setEmail('');
+          getChits();
+        } else {
+          console.error(error);
+        }
+      })
+      .catch(error => {
+        //Handle a network error or wrong credential
+        console.error(error);
       });
   }
 
@@ -311,7 +347,6 @@ const Home = props => {
       .then(response => {
         //Response should now be in right format to use
         console.log(response);
-        console.log('Tester = ');
         setChitData(response);
         //console.log('chitData = ' + chitData[4].chit_content);
       })
@@ -360,14 +395,11 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
   },
-  bottomContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    borderTopWidth: 1,
+    borderTopWidth: 2,
+    borderBottomWidth: 2,
     borderColor: Colors.primary,
   },
   button: {
