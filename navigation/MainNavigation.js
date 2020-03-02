@@ -16,21 +16,46 @@ import Icon from 'react-native-vector-icons/Octicons';
 //import colors
 import Colors from '../constants/Colors';
 
+//Reuseable header options for each stack nav
+const headerOptions = {
+  headerStyle: {
+    backgroundColor: Colors.primary,
+  },
+  headerTitleStyle: {
+    color: Colors.compliment,
+  },
+};
+
 //Stack navigators
-const HomeStackNavigator = createStackNavigator({
-  Home: Home,
-  User: UserScreen,
-});
+const HomeStackNavigator = createStackNavigator(
+  {
+    Home: Home,
+    User: UserScreen,
+  },
+  {
+    defaultNavigationOptions: headerOptions,
+  },
+);
 
-const SearchStackNavigator = createStackNavigator({
-  Search: SearchUserScreen,
-  User: UserScreen,
-});
+const SearchStackNavigator = createStackNavigator(
+  {
+    Search: SearchUserScreen,
+    User: UserScreen,
+  },
+  {
+    defaultNavigationOptions: headerOptions,
+  },
+);
 
-const AccountStackNavigator = createStackNavigator({
-  Account: MyAccount,
-  AccountDetails: MyAccountDetails,
-});
+const AccountStackNavigator = createStackNavigator(
+  {
+    Account: MyAccount,
+    AccountDetails: MyAccountDetails,
+  },
+  {
+    defaultNavigationOptions: headerOptions,
+  },
+);
 
 //root nav
 const TabNavigator = createBottomTabNavigator(
