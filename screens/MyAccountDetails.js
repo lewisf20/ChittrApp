@@ -2,15 +2,13 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
 /* 
-  This screen will deal with the user's own profile, listing their chits, followers
-  and who they're following, their account photo, and links to update their profile 
-  information.
+  This screen will deal with the user's details, allow them to update their details etc
 */
 
-const MyAccount = props => {
+const MyAccountDetails = props => {
   return (
     <View style={styles.container}>
-      <Text>My account screen</Text>
+      <Text>My Account Details Screen</Text>
     </View>
   );
 };
@@ -23,4 +21,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyAccount;
+export default MyAccountDetails;

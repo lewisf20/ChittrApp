@@ -9,6 +9,12 @@ import Btn from '../components/Btn';
 import Card from '../components/Card';
 import Input from '../components/Input';
 
+/*
+  This is the Home screen, where chits are loaded into a list, also user should 
+  be able to signup and login from this page. The chits shown depend on whether the user
+  is logged in or not.
+*/
+
 const Home = props => {
   //###################### MANAGE STATE #######################
 
