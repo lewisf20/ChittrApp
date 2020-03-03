@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-
+import {useSelector} from 'react-redux';
 //import components
 import Btn from '../components/Btn';
 /*
@@ -10,9 +10,12 @@ import Btn from '../components/Btn';
 */
 
 const SearchUserScreen = props => {
+  //gets the global token for if the user is logged in
+  const storeToken = useSelector(state => state.authentication.token);
   return (
     <View style={styles.container}>
       <Text> Search Users Screen </Text>
+      {console.log('Search userScreen store token = ' + storeToken)}
       <Btn
         title="User Screen"
         onPress={() => {

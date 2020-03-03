@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-
+import {useSelector} from 'react-redux';
 //import components
 import Btn from '../components/Btn';
 /* 
@@ -10,9 +10,12 @@ import Btn from '../components/Btn';
 */
 
 const MyAccount = props => {
+  //gets the global token for if the user is logged in
+  const storeToken = useSelector(state => state.authentication.token);
   return (
     <View style={styles.container}>
       <Text>My account screen</Text>
+      {console.log('MyAccount store token = ' + storeToken)}
       <Btn
         title="Account Details"
         onPress={() => {
