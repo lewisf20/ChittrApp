@@ -41,10 +41,10 @@ const Home = props => {
   //State to hold chits
   const [chitData, setChitData] = useState([]);
 
-  //run get chits once
+  //run get chits every time Islogged in is changed
   useEffect(() => {
     getChits();
-  }, []);
+  }, [isLoggedIn]);
 
   //#################### MODAL CONTENT ############################
 
@@ -78,6 +78,7 @@ const Home = props => {
           title="Log in"
           onPress={() => {
             login();
+            console.log('Token = ' + token);
           }}
         />
         <Btn
@@ -178,7 +179,15 @@ const Home = props => {
   } else {
     buttonContent = (
       <View style={styles.buttonContainer}>
-        <Btn title="Log out" style={styles.button} onPress={() => logout()} />
+        <Btn
+          title="Log out"
+          style={styles.button}
+          onPress={() => {
+            logout();
+            console.log('Token = ' + token);
+            //getChits();
+          }}
+        />
       </View>
     );
   }
@@ -189,6 +198,7 @@ const Home = props => {
     <ScrollView style={styles.screen}>
       {loginModalContent}
       {signUpModalContent}
+      {console.log('Inside return token = ' + token)}
       <View style={styles.welcomeContainer}>
         <Card>
           <Text style={styles.welcomeText}>Welcome{' ' + email}!</Text>
@@ -234,7 +244,6 @@ const Home = props => {
         console.log('status code: ' + response.status);
         //check response code, if okay return response else throw error
         if (response.ok) {
-          getChits();
           return response.json();
         } else {
           networkErrorHandler();
@@ -247,8 +256,13 @@ const Home = props => {
         //get response values for id and token
         var respToken = response['token'];
 
+        //set token state to response token val
+        setToken(respToken);
+        //Set logged in to true
+        setIsLoggedIn(true);
+
         //Handle the login - set required state etc
-        networkSuccessHandler(respToken);
+        loginSuccessHandler(respToken);
       })
       .catch(error => {
         //Handle a network error or wrong credential
@@ -270,9 +284,8 @@ const Home = props => {
         //check response code, if okay return response else throw error
         if (response.ok) {
           setIsLoggedIn(false);
-          setToken('');
+          setToken('logged out none set');
           setEmail('');
-          getChits();
         } else {
           console.error(error);
         }
@@ -321,16 +334,18 @@ const Home = props => {
 
   async function getChits() {
     var headers = {};
-    isLoggedIn
-      ? (headers = {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'X-Authorization': token,
-        })
-      : (headers = {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        });
+    if (isLoggedIn) {
+      headers = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Authorization': token,
+      };
+    } else {
+      headers = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      };
+    }
     return fetch('http://10.0.2.2:3333/api/v0.0.5/chits', {
       method: 'GET',
       headers: headers,
@@ -347,7 +362,7 @@ const Home = props => {
       .then(response => {
         //Response should now be in right format to use
         console.log(response);
-        setChitData(response);
+        setChitData(response.reverse());
         //console.log('chitData = ' + chitData[4].chit_content);
       })
       .catch(error => {
@@ -369,7 +384,7 @@ const Home = props => {
   }
 
   //Login success handler
-  function networkSuccessHandler(token) {
+  function loginSuccessHandler(token) {
     Alert.alert(
       'Log in Success',
       'Your email: ' + email + '\nYour token: ' + token,
@@ -379,11 +394,6 @@ const Home = props => {
           onPress: () => {
             setLogInVisible(false);
             setSignUpVisible(false);
-
-            //set token state to these values
-            setToken(token);
-            //Set logged in to true
-            setIsLoggedIn(true);
           },
         },
       ],
