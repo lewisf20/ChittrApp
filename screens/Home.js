@@ -9,6 +9,9 @@ import {
   ScrollView,
 } from 'react-native';
 
+//bring in redux
+import {useSelector, useDispatch} from 'react-redux';
+
 //bring in custom components
 import Colors from '../constants/Colors';
 import Btn from '../components/Btn';
@@ -25,6 +28,10 @@ import ChitItem from '../components/ChitItem';
 const Home = props => {
   //###################### MANAGE STATE #######################
 
+  const [token, setToken] = useState('None Set');
+  //sets token on the global state, the store
+  const storeToken = useSelector(state => (state.authentication.token = token));
+
   //Manage whether modals are visible
   const [logInVisible, setLogInVisible] = useState(false);
   const [signUpVisible, setSignUpVisible] = useState(false);
@@ -33,7 +40,7 @@ const Home = props => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
-  const [token, setToken] = useState('None Set');
+
   const [givenName, setGivenName] = useState('');
   const [familyName, setFamilyName] = useState('');
 
@@ -198,6 +205,7 @@ const Home = props => {
     <ScrollView style={styles.screen}>
       {loginModalContent}
       {signUpModalContent}
+      {console.log('store token = ' + storeToken)}
       <View style={styles.welcomeContainer}>
         <Card>
           <Text style={styles.welcomeText}>Welcome{' ' + email}!</Text>
