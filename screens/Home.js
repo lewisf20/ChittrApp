@@ -198,7 +198,6 @@ const Home = props => {
     <ScrollView style={styles.screen}>
       {loginModalContent}
       {signUpModalContent}
-      {console.log('Inside return token = ' + token)}
       <View style={styles.welcomeContainer}>
         <Card>
           <Text style={styles.welcomeText}>Welcome{' ' + email}!</Text>
@@ -334,6 +333,7 @@ const Home = props => {
 
   async function getChits() {
     var headers = {};
+    //If logged in set x auth to token, else use no auth to get all chits
     if (isLoggedIn) {
       headers = {
         Accept: 'application/json',
