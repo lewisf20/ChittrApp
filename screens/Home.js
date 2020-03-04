@@ -30,7 +30,6 @@ const Home = props => {
 
   // //sets token on the global state, the store
   const storeToken = useSelector(state => state.authentication.token);
-  const storeIsLoggedIn = useSelector(state => state.authentication.isLoggedIn);
 
   //State to hold chits
   const [chitData, setChitData] = useState([]);
@@ -49,7 +48,6 @@ const Home = props => {
       {/* {loginModalContent}
       {signUpModalContent} */}
       {console.log('store token = ' + storeToken)}
-      {console.log('store logged in = ' + storeIsLoggedIn)}
       <View style={styles.welcomeContainer}>
         {/* {buttonContent} */}
         {/* <Text style={styles.welcomeText}>Chits</Text> */}
@@ -68,7 +66,7 @@ const Home = props => {
   async function getChits() {
     var headers = {};
     //If logged in set x auth to token, else use no auth to get all chits
-    if (storeIsLoggedIn) {
+    if (storeToken !== null) {
       headers = {
         Accept: 'application/json',
         'Content-Type': 'application/json',

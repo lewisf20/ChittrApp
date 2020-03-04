@@ -1,6 +1,7 @@
 export const TOKEN = 'TOKEN';
 export const SIGNUP = 'SIGNUP';
 export const LOGIN = 'LOGIN';
+export const LOGOUT = 'LOGOUT';
 
 export const setToken = token => {
   return {type: TOKEN, token: token};
@@ -23,14 +24,18 @@ export const signup = (email, password, givenName, familyName) => {
     });
 
     if (!response.ok) {
-      throw new Error('error');
+      throw new Error('Invalid email/email exists');
     }
 
     const responseData = await response.json();
 
     const responseJsonData = JSON.stringify(responseData);
     console.log('Signup Response = ' + responseJsonData);
-    dispatch({type: SIGNUP});
+    dispatch({
+      type: SIGNUP,
+      token: responseData.token,
+      userId: responseData.id,
+    });
   };
 };
 
@@ -49,12 +54,32 @@ export const login = (email, password) => {
     });
 
     if (!response.ok) {
-      throw new Error('error');
+      throw new Error('Invalid email or password');
     }
 
     const responseData = await response.json();
     const responseJsonData = JSON.stringify(responseData);
     console.log('Login Response = ' + responseJsonData);
-    dispatch({type: LOGIN});
+    dispatch({type: LOGIN, token: responseData.token, userId: responseData.id});
+  };
+};
+
+export const logout = token => {
+  return async dispatch => {
+    const response = await fetch('http://10.0.2.2:3333/api/v0.0.5/logout', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Authorization': token,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Error');
+    }
+
+    console.log('inside logout');
+    dispatch({type: LOGOUT, token: null, userId: null});
   };
 };

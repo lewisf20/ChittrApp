@@ -1,7 +1,15 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, Modal, Alert} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Modal,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import * as authActions from '../store/actions/Authentication';
+import Authentication from '../store/reducers/Authentication';
 //import components
 import Btn from '../components/Btn';
 import Card from '../components/Card';
@@ -16,15 +24,14 @@ import Colors from '../constants/Colors';
 const MyAccount = props => {
   const dispatch = useDispatch();
   //set state which goes into store state first
-  const [token, setToken] = useState('');
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   //sets token on the global state, the store
-  const storeToken = useSelector(state => (state.authentication.token = token));
-  const storeIsLoggedIn = useSelector(
-    state => (state.authentication.isLoggedIn = isLoggedIn),
-  );
+  const storeToken = useSelector(state => state.authentication.token);
 
+  const [error, setError] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   //Manage whether modals are visible
   const [logInVisible, setLogInVisible] = useState(false);
   const [signUpVisible, setSignUpVisible] = useState(false);
@@ -33,16 +40,42 @@ const MyAccount = props => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
-
   const [givenName, setGivenName] = useState('');
   const [familyName, setFamilyName] = useState('');
 
-  const signupHandler = () => {
-    dispatch(authActions.signup(email, password, givenName, familyName));
+  //alert the user to an error on login or signup
+  useEffect(() => {
+    if (error) {
+      Alert.alert('An error has occured', error, [{text: 'okay'}]);
+    }
+  }, [error]);
+
+  //This handles logging in and signing up
+  const authHandler = async () => {
+    let action;
+    //set action depends on if login modal or signup modal is open
+    if (logInVisible) {
+      action = authActions.login(email, password);
+    } else if (signUpVisible) {
+      action = authActions.signup(email, password, givenName, familyName);
+    }
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(action);
+      setLogInVisible(false);
+      props.navigation.navigate('Home');
+      setIsLoggedIn(true);
+    } catch (err) {
+      setError(err.message);
+    }
+
+    setIsLoading(false);
   };
 
-  const loginHandler = () => {
-    dispatch(authActions.login(email, password));
+  const logOutHandler = async () => {
+    await dispatch(authActions.logout(storeToken));
+    setIsLoggedIn(false);
   };
 
   //Content of the login modal
@@ -69,7 +102,12 @@ const MyAccount = props => {
           value={password}
         />
 
-        <Btn style={styles.cardButton} title="Log in" onPress={loginHandler} />
+        {isLoading ? (
+          <ActivityIndicator size="large" color={Colors.primary} />
+        ) : (
+          <Btn style={styles.cardButton} title="Log in" onPress={authHandler} />
+        )}
+
         <Btn
           style={{...styles.cardButton, backgroundColor: Colors.cancel}}
           title="Cancel"
@@ -121,21 +159,26 @@ const MyAccount = props => {
           onChangeText={familyName => setFamilyName(familyName)}
           value={familyName}
         />
-        <Btn
-          style={styles.cardButton}
-          title="Sign Up"
-          onPress={() => {
-            //Check if passwords match
-            if (password !== repeatPassword) {
-              Alert.alert('Passwords do not match!');
-              //Clear password input fields by resetting state
-              setPassword('');
-              setRepeatPassword('');
-            } else {
-              signupHandler();
-            }
-          }}
-        />
+        {isLoading ? (
+          <ActivityIndicator size="large" color={Colors.primary} />
+        ) : (
+          <Btn
+            style={styles.cardButton}
+            title="Sign Up"
+            onPress={() => {
+              //Check if passwords match
+              if (password !== repeatPassword) {
+                Alert.alert('Passwords do not match!');
+                //Clear password input fields by resetting state
+                setPassword('');
+                setRepeatPassword('');
+              } else {
+                authHandler();
+              }
+            }}
+          />
+        )}
+
         <Btn
           style={{...styles.cardButton, backgroundColor: Colors.cancel}}
           title="Cancel"
@@ -169,8 +212,7 @@ const MyAccount = props => {
           title="Log out"
           style={styles.button}
           onPress={() => {
-            logout();
-            console.log('Token = ' + token);
+            logOutHandler();
           }}
         />
       </View>
@@ -183,8 +225,7 @@ const MyAccount = props => {
       {buttonContent}
       {loginModalContent}
       {signUpModalContent}
-      {console.log('MyAccount store token = ' + storeToken)}
-      {console.log('MyAccount store logged in = ' + storeIsLoggedIn)}
+      {console.log('STORE TOKEN = ' + storeToken)}
       <Btn
         title="Account Details"
         onPress={() => {
