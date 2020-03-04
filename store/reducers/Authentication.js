@@ -1,6 +1,7 @@
 import {TOKEN} from '../actions/Authentication';
 const initialState = {
-  token: 'hi',
+  token: 'none set',
+  isLoggedIn: false,
 };
 
 //stores the global state to use across the app

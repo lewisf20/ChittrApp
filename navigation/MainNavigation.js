@@ -57,7 +57,8 @@ const AccountStackNavigator = createStackNavigator(
   },
 );
 
-//root nav
+//rootnav
+//tab nav
 const TabNavigator = createBottomTabNavigator(
   {
     Home: {
