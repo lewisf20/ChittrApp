@@ -6,11 +6,17 @@ import {createStore, combineReducers, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 import ReduxThunk from 'redux-thunk';
 
+//import reducers
 import authorisationReducer from './store/reducers/Authentication';
+import userManagementReducer from './store/reducers/UserManagement';
+import chitManagementReducer from './store/reducers/ChitManagement';
+
 import MainNavigation from './navigation/MainNavigation';
 
 const rootReducer = combineReducers({
   authentication: authorisationReducer,
+  userManagement: userManagementReducer,
+  chitManagement: chitManagementReducer,
 });
 
 //Redux store - stores all state to be used app wide
