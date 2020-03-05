@@ -74,8 +74,11 @@ const MyAccount = props => {
   };
 
   const logOutHandler = async () => {
+    setIsLoading(true);
     await dispatch(authActions.logout(storeToken));
+    setIsLoading(false);
     setIsLoggedIn(false);
+    props.navigation.navigate('Home');
   };
 
   //Content of the login modal
@@ -208,13 +211,17 @@ const MyAccount = props => {
   } else {
     buttonContent = (
       <View style={styles.buttonContainer}>
-        <Btn
-          title="Log out"
-          style={styles.button}
-          onPress={() => {
-            logOutHandler();
-          }}
-        />
+        {isLoading ? (
+          <ActivityIndicator size="large" color={Colors.primary} />
+        ) : (
+          <Btn
+            title="Log out"
+            style={styles.button}
+            onPress={() => {
+              logOutHandler();
+            }}
+          />
+        )}
       </View>
     );
   }

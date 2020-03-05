@@ -37,3 +37,28 @@ export const getChits = token => {
     });
   };
 };
+
+export const postChit = (token, chit) => {
+  return async dispatch => {
+    let currentDate = new Date();
+    const response = await fetch('http://10.0.2.2:3333/api/v0.0.5/chits', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Authorization': token,
+      },
+      body: JSON.stringify({
+        timestamp: currentDate,
+        chit_content: chit,
+        //add location here
+      }),
+    });
+    if (!response.ok) {
+      throw new Error('response error!');
+    }
+    dispatch({
+      type: POST_CHIT,
+    });
+  };
+};

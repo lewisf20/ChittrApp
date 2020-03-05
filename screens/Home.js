@@ -35,11 +35,6 @@ const Home = props => {
   //State to hold chits
   const [chitData, setChitData] = useState([]);
 
-  //get chits on first run
-  // useEffect(() => {
-  //   getChits();
-  // }, []);
-
   useEffect(() => {
     chitHandler();
   }, [storeToken]);
@@ -57,13 +52,8 @@ const Home = props => {
   //###################### RETURN #########################################
   return (
     <SafeAreaView style={styles.screen}>
-      {/* {loginModalContent}
-      {signUpModalContent} */}
       {console.log('store token = ' + storeToken)}
-      <View style={styles.welcomeContainer}>
-        {/* {buttonContent} */}
-        {/* <Text style={styles.welcomeText}>Chits</Text> */}
-      </View>
+      <View style={styles.welcomeContainer}></View>
       <Card style={styles.chitsContainer}>
         <FlatList
           contentContainerStyle={styles.list}
@@ -74,45 +64,6 @@ const Home = props => {
       </Card>
     </SafeAreaView>
   );
-
-  async function getChits() {
-    var headers = {};
-    //If logged in set x auth to token, else use no auth to get all chits
-    if (storeToken !== null) {
-      headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'X-Authorization': storeToken,
-      };
-    } else {
-      headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      };
-    }
-    return fetch('http://10.0.2.2:3333/api/v0.0.5/chits', {
-      method: 'GET',
-      headers: headers,
-    })
-      .then(response => {
-        console.log('status code: ' + response.status);
-        //check response code, if okay return response else throw error
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Response not OK');
-        }
-      })
-      .then(response => {
-        //Response should now be in right format to use
-        console.log(response);
-        setChitData(response.reverse());
-        //console.log('chitData = ' + chitData[4].chit_content);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
 };
 
 const styles = StyleSheet.create({
