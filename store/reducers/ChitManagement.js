@@ -10,3 +10,20 @@ const initialState = {
   token: null,
   userId: null,
 };
+
+export default (state = initialState, action) => {
+  switch (action.type) {
+    case GET_CHITS:
+      return {
+        token: action.token,
+        chitList: action.chitList,
+      };
+    case POST_CHIT:
+      return {
+        token: action.token,
+        chit: action.chit,
+      };
+    default:
+      return state;
+  }
+};

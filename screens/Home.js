@@ -11,7 +11,7 @@ import {
 
 //bring in redux
 import {useSelector, useDispatch} from 'react-redux';
-
+import * as chitActions from '../store/actions/ChitManagement';
 //bring in custom components
 import Colors from '../constants/Colors';
 import Btn from '../components/Btn';
@@ -28,17 +28,29 @@ import ChitItem from '../components/ChitItem';
 const Home = props => {
   //###################### MANAGE STATE #######################
 
+  const dispatch = useDispatch();
   // //sets token on the global state, the store
   const storeToken = useSelector(state => state.authentication.token);
-
+  const storeChitList = useSelector(state => state.chitManagement.chitList);
   //State to hold chits
   const [chitData, setChitData] = useState([]);
 
   //get chits on first run
-  useEffect(() => {
-    getChits();
-  }, []);
+  // useEffect(() => {
+  //   getChits();
+  // }, []);
 
+  useEffect(() => {
+    chitHandler();
+  }, [storeToken]);
+
+  const chitHandler = async () => {
+    try {
+      await dispatch(chitActions.getChits(storeToken));
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const renderChitItem = itemData => <ChitItem item={itemData.item} />;
 
   //#######################################################################
@@ -56,7 +68,7 @@ const Home = props => {
         <FlatList
           contentContainerStyle={styles.list}
           keyExtractor={item => item.chit_id.toString()}
-          data={chitData}
+          data={storeChitList}
           renderItem={renderChitItem}
         />
       </Card>
