@@ -9,6 +9,7 @@ import SearchUserScreen from '../screens/SearchUserScreen';
 import Home from '../screens/Home';
 import UserScreen from '../screens/UserScreen';
 import MyAccountDetails from '../screens/MyAccountDetails';
+import ChitScreen from '../screens/ChitScreen';
 
 //import icons
 import Icon from 'react-native-vector-icons/Octicons';
@@ -30,6 +31,7 @@ const headerOptions = {
 const HomeStackNavigator = createStackNavigator(
   {
     Home: Home,
+    Chit: ChitScreen,
     User: UserScreen,
   },
   {

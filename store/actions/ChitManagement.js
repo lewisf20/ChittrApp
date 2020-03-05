@@ -34,13 +34,14 @@ export const getChits = token => {
     dispatch({
       type: GET_CHITS,
       chitList: responseData.reverse(),
+      token: token,
     });
   };
 };
 
 export const postChit = (token, chit) => {
   return async dispatch => {
-    let currentDate = new Date();
+    let currentDate = Date.now();
     const response = await fetch('http://10.0.2.2:3333/api/v0.0.5/chits', {
       method: 'POST',
       headers: {
@@ -57,6 +58,9 @@ export const postChit = (token, chit) => {
     if (!response.ok) {
       throw new Error('response error!');
     }
+    const responseData = await response.json();
+    const responseJsonData = JSON.stringify(responseData);
+    console.log('post chit Response = ' + responseJsonData);
     dispatch({
       type: POST_CHIT,
     });

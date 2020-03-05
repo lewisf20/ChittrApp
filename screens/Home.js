@@ -1,12 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {
-  View,
-  Text,
   StyleSheet,
-  Modal,
-  Alert,
+  ActivityIndicator,
   FlatList,
   SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
 
 //bring in redux
@@ -14,9 +12,6 @@ import {useSelector, useDispatch} from 'react-redux';
 import * as chitActions from '../store/actions/ChitManagement';
 //bring in custom components
 import Colors from '../constants/Colors';
-import Btn from '../components/Btn';
-import Card from '../components/Card';
-import Input from '../components/Input';
 import ChitItem from '../components/ChitItem';
 
 /*
@@ -32,36 +27,48 @@ const Home = props => {
   // //sets token on the global state, the store
   const storeToken = useSelector(state => state.authentication.token);
   const storeChitList = useSelector(state => state.chitManagement.chitList);
-  //State to hold chits
-  const [chitData, setChitData] = useState([]);
+
+  //State to hold whether storeChitList has loaded
+  const [chitsLoaded, setChitsLoaded] = useState(false);
 
   useEffect(() => {
     chitHandler();
-  }, [storeToken]);
+  }, [storeToken]); //will depend on more than token - will need updating
 
   const chitHandler = async () => {
     try {
       await dispatch(chitActions.getChits(storeToken));
+      setChitsLoaded(true);
     } catch (err) {
       console.log(err);
     }
   };
-  const renderChitItem = itemData => <ChitItem item={itemData.item} />;
+
+  const renderChitItem = itemData => (
+    <TouchableOpacity
+      style={{borderBottomWidth: 2, borderColor: '#cbcbcb', padding: 10}}
+      activeOpacity={0.75}
+      onPress={() => props.navigation.navigate('Chit', {item: itemData.item})}>
+      <ChitItem item={itemData.item} />
+    </TouchableOpacity>
+  );
 
   //#######################################################################
   //###################### RETURN #########################################
   return (
     <SafeAreaView style={styles.screen}>
       {console.log('store token = ' + storeToken)}
-      <View style={styles.welcomeContainer}></View>
-      <Card style={styles.chitsContainer}>
+
+      {!chitsLoaded ? (
+        <ActivityIndicator size="large" color={Colors.primary} />
+      ) : (
         <FlatList
           contentContainerStyle={styles.list}
           keyExtractor={item => item.chit_id.toString()}
           data={storeChitList}
           renderItem={renderChitItem}
         />
-      </Card>
+      )}
     </SafeAreaView>
   );
 };
@@ -70,40 +77,6 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     justifyContent: 'center',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    borderTopWidth: 2,
-    borderBottomWidth: 2,
-    borderColor: Colors.primary,
-  },
-  button: {
-    width: '35%',
-  },
-  card: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  cardButton: {
-    alignSelf: 'center',
-  },
-  cardInput: {},
-  titleText: {
-    color: Colors.primary,
-    textAlign: 'center',
-    fontSize: 52,
-    paddingRight: 10,
-  },
-  welcomeContainer: {
-    padding: 8,
-    borderTopWidth: 5,
-    borderTopColor: Colors.compliment,
-  },
-  welcomeText: {
-    color: Colors.primary,
-    textAlign: 'center',
-    fontSize: 24,
   },
   chitsContainer: {
     height: '85%',

@@ -23,10 +23,9 @@ const ChitItem = props => {
 };
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 25,
+    marginVertical: 15,
     elevation: 5,
   },
-  contentContainer: {},
   contentInfo: {},
   content: {
     paddingVertical: 20,
