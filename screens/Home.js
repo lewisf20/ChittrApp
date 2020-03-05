@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   chitsContainer: {
     height: '85%',
-    backgroundColor: '#cbcbcb',
+    backgroundColor: Colors.background,
     justifyContent: 'center',
     alignItems: 'center',
   },

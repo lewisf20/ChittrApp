@@ -4,4 +4,5 @@ export default {
   primary: 'royalblue',
   compliment: '#fff',
   cancel: 'red',
+  background: '#cbcbcb',
 };
