@@ -58,8 +58,14 @@ const Home = props => {
     <TouchableOpacity
       style={{borderBottomWidth: 2, borderColor: '#cbcbcb', padding: 10}}
       activeOpacity={0.75}
-      onPress={() => props.navigation.navigate('Chit', {item: itemData.item})}>
-      <ChitItem item={itemData.item} />
+      onPress={() =>
+        props.navigation.navigate('Chit', {
+          item: itemData.item,
+          username: itemData.item.user.given_name,
+          userId: itemData.item.user.user_id,
+        })
+      }>
+      <ChitItem item={itemData.item} username={itemData.item.user.given_name} />
     </TouchableOpacity>
   );
 

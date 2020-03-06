@@ -19,8 +19,8 @@ const ChitScreen = props => {
   //grab data from navigation parameters
   const item = props.navigation.getParam('item');
   //extract user id out of data - to use on user screen to get users details
-  const userId = item.user.user_id;
-  const username = item.user.given_name;
+  const userId = props.navigation.getParam('userId');
+  const username = props.navigation.getParam('username');
 
   return (
     <View style={styles.container}>
@@ -32,10 +32,11 @@ const ChitScreen = props => {
             props.navigation.navigate('User', {
               userId: userId,
               username: username,
+              userId: userId,
             })
           }>
           <View style={styles.contentInfo}>
-            <Text style={styles.name}>{item.user.given_name}</Text>
+            <Text style={styles.name}>{username}</Text>
           </View>
         </TouchableOpacity>
       </Card>

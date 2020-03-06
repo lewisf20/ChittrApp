@@ -1,28 +1,66 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  TouchableOpacityComponent,
+  ActivityIndicator,
+  FlatList,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import * as userActions from '../store/actions/UserManagement';
 /* 
   This screen will show another users profile, listing their chits, how many
   following and followers they have got. It will also include links to a list of
   who their followers and following are.
   A button to follow/unfollow this particular user will also be on this page.
 */
+import Colors from '../constants/Colors';
 import Btn from '../components/Btn';
+import ChitItem from '../components/ChitItem';
 
 const UserScreen = props => {
+  const dispatch = useDispatch();
   //gets the global token for if the user is logged in
   const storeToken = useSelector(state => state.authentication.token);
+  const userData = useSelector(state => state.userManagement.userData);
+  const userChits = userData.recent_chits; // array of recent_chit objects
+  const [chitsLoaded, setChitsLoaded] = useState(false);
 
   //get params
   const username = props.navigation.getParam('username');
+  const userId = props.navigation.getParam('userId');
+
+  useEffect(() => {
+    getUserDetailsHandler();
+  }, [userId]);
+
+  const getUserDetailsHandler = async () => {
+    try {
+      await dispatch(userActions.getUser(userId));
+    } catch (err) {
+      console.log(err);
+    }
+    setChitsLoaded(true);
+  };
+
+  const renderChitItem = itemData => (
+    <TouchableOpacity
+      style={{borderBottomWidth: 2, borderColor: '#cbcbcb', padding: 10}}
+      activeOpacity={0.75}
+      onPress={() =>
+        props.navigation.navigate('Chit', {
+          item: itemData.item,
+          username: username,
+        })
+      }>
+      <ChitItem item={itemData.item} username={username} />
+    </TouchableOpacity>
+  );
+
   return (
     <View style={styles.container}>
+      {console.log(userChits)}
       <View style={styles.profileContainer}>
         <View style={styles.picContainer}>
           <View style={styles.temp}></View>
@@ -38,7 +76,18 @@ const UserScreen = props => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.chitsContainer}></View>
+      <View style={styles.chitsContainer}>
+        {!chitsLoaded ? (
+          <ActivityIndicator size="large" color={Colors.primary} />
+        ) : (
+          <FlatList
+            contentContainerStyle={styles.list}
+            keyExtractor={item => item.chit_id.toString()}
+            data={userChits}
+            renderItem={renderChitItem}
+          />
+        )}
+      </View>
     </View>
   );
 };
@@ -58,12 +107,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     borderBottomWidth: 1,
-    borderColor: 'red',
+    borderColor: Colors.background,
     padding: 15,
   },
   chitsContainer: {
-    borderWidth: 1,
-    borderColor: 'blue',
+    flex: 3 / 4,
   },
   picContainer: {
     justifyContent: 'center',
@@ -74,6 +122,9 @@ const styles = StyleSheet.create({
     width: '55%',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
+  },
+  list: {
+    flexGrow: 1,
   },
   temp: {
     height: 75,

@@ -8,7 +8,7 @@ const ChitItem = props => {
   return (
     <Card style={{...styles.container, ...props.style}}>
       <View style={styles.contentInfo}>
-        <Text style={styles.name}>{props.item.user.given_name} chittr'd:</Text>
+        <Text style={styles.name}>{props.username} chittr'd:</Text>
       </View>
       <View style={styles.content}>
         <Text style={{...styles.text, ...props.text}}>
