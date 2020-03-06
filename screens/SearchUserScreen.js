@@ -44,7 +44,16 @@ const SearchUserScreen = props => {
   };
 
   const renderUserItem = itemData => (
-    <TouchableOpacity>
+    <TouchableOpacity
+      style={{borderBottomWidth: 2, borderColor: '#cbcbcb', padding: 10}}
+      activeOpacity={0.75}
+      onPress={() =>
+        props.navigation.navigate('User', {
+          item: itemData.item,
+          username: itemData.item.given_name,
+          userId: itemData.item.user_id,
+        })
+      }>
       <Card style={styles.userCard}>
         <Text style={styles.username}>@{itemData.item.given_name}</Text>
       </Card>
