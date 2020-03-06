@@ -17,21 +17,23 @@ const ChitScreen = props => {
   //gets the global token for if the user is logged in
   const storeToken = useSelector(state => state.authentication.token);
   //grab data from navigation parameters
-  const data = props.navigation.state.params;
-  const item = data.item;
+  const item = props.navigation.getParam('item');
   //extract user id out of data - to use on user screen to get users details
-  const userId = data.item.user.user_id;
+  const userId = item.user.user_id;
+  const username = item.user.given_name;
 
   return (
     <View style={styles.container}>
-      {console.log(userId)}
-      {/* <ChitItem style={styles.chit} item={data.item} text={styles.text} /> */}
-
       <Card style={styles.nameContainer}>
         <TouchableOpacity
           style={styles.touchContainer}
           activeOpacity={0.75}
-          onPress={() => props.navigation.navigate('User', {userId: userId})}>
+          onPress={() =>
+            props.navigation.navigate('User', {
+              userId: userId,
+              username: username,
+            })
+          }>
           <View style={styles.contentInfo}>
             <Text style={styles.name}>{item.user.given_name}</Text>
           </View>
