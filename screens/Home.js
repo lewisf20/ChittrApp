@@ -5,14 +5,22 @@ import {
   FlatList,
   SafeAreaView,
   TouchableOpacity,
+  Text,
+  View,
+  Modal,
 } from 'react-native';
+
+//import icons
+import Icon from 'react-native-vector-icons/Octicons';
 
 //bring in redux
 import {useSelector, useDispatch} from 'react-redux';
 import * as chitActions from '../store/actions/ChitManagement';
 //bring in custom components
 import Colors from '../constants/Colors';
+import Btn from '../components/Btn';
 import ChitItem from '../components/ChitItem';
+import Input from '../components/Input';
 
 /*
   This is the Home screen, where chits are loaded into a list, also user should 
@@ -30,10 +38,12 @@ const Home = props => {
 
   //State to hold whether storeChitList has loaded
   const [chitsLoaded, setChitsLoaded] = useState(false);
+  const [isComposing, setIsComposing] = useState(false);
+  const [chitText, setChitText] = useState('');
 
   useEffect(() => {
     chitHandler();
-  }, [storeToken]); //will depend on more than token - will need updating
+  }, [storeToken, isComposing]); //will depend on more than token - will need updating
 
   const chitHandler = async () => {
     try {
@@ -53,12 +63,65 @@ const Home = props => {
     </TouchableOpacity>
   );
 
+  const postChitHandler = async () => {
+    try {
+      setChitsLoaded(false);
+      await dispatch(chitActions.postChit(storeToken, chitText));
+    } catch (err) {
+      console.log(err);
+    }
+    chitHandler();
+    setChitsLoaded(true);
+  };
+
+  const composeModal = (
+    <Modal animationType="slide" transparent={false} visible={isComposing}>
+      <View style={styles.composeContainer}>
+        <Input
+          placeholder="Compose your chit..."
+          style={styles.composeInput}
+          multiline={true}
+          numberOfLines={3}
+          onChangeText={chitText => setChitText(chitText)}
+          value={chitText}
+        />
+        {!chitsLoaded ? (
+          <ActivityIndicator size="large" color={Colors.primary} />
+        ) : (
+          <Btn
+            title="Post"
+            onPress={() => {
+              postChitHandler();
+              setIsComposing(false);
+            }}
+          />
+        )}
+
+        <Btn
+          title="Cancel"
+          style={{backgroundColor: Colors.cancel}}
+          onPress={() => setIsComposing(false)}
+        />
+      </View>
+    </Modal>
+  );
+
+  const composeBtn = (
+    <Btn title="Compose" onPress={() => setIsComposing(true)} />
+  );
+  const composeText = (
+    <Text style={{textAlign: 'center', fontSize: 20}}>
+      Log in to compose a chit!
+    </Text>
+  );
+
   //#######################################################################
   //###################### RETURN #########################################
   return (
     <SafeAreaView style={styles.screen}>
       {console.log('store token = ' + storeToken)}
-
+      {storeToken ? composeBtn : composeText}
+      {composeModal}
       {!chitsLoaded ? (
         <ActivityIndicator size="large" color={Colors.primary} />
       ) : (
@@ -86,6 +149,15 @@ const styles = StyleSheet.create({
   },
   list: {
     flexGrow: 1,
+  },
+  composeContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  composeInput: {
+    borderWidth: 2,
+    borderBottomWidth: 2,
+    borderRadius: 10,
   },
 });
 

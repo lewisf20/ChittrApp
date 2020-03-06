@@ -6,6 +6,13 @@ export const POST_CHIT = 'POST_CHIT';
 This contains the actions needed for chit management
 */
 
+/**
+ *
+ * getChits retrieves all the chits from the server based on if
+ * the user is logged in or not. If the user is logged in, a token is
+ * used in the request, if token is null that means the user has not been
+ * authenticated and a token will not be used and that gets every chit.
+ */
 export const getChits = token => {
   return async dispatch => {
     let headers = {};
@@ -33,12 +40,13 @@ export const getChits = token => {
     console.log('getchits Response = ' + responseJsonData);
     dispatch({
       type: GET_CHITS,
-      chitList: responseData.reverse(),
+      chitList: responseData,
       token: token,
     });
   };
 };
 
+//NOT BEEN TESTED
 export const postChit = (token, chit) => {
   return async dispatch => {
     let currentDate = Date.now();
@@ -63,6 +71,8 @@ export const postChit = (token, chit) => {
     console.log('post chit Response = ' + responseJsonData);
     dispatch({
       type: POST_CHIT,
+      token: action.token,
+      chit: action.chit,
     });
   };
 };

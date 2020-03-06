@@ -8,6 +8,7 @@ const Btn = ({...props}) => {
     //inherit styles and props from touchable opacity
     <TouchableOpacity {...props} style={{...styles.button, ...props.style}}>
       <Text style={styles.btnText}>{props.title}</Text>
+      {props.children}
     </TouchableOpacity>
   );
 };
