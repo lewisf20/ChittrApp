@@ -8,6 +8,7 @@ import {
   Text,
   View,
   Modal,
+  Alert,
 } from 'react-native';
 
 //import icons
@@ -80,9 +81,26 @@ const Home = props => {
     setChitsLoaded(true);
   };
 
+  //Makes sure user cant make a chit longer than 141 characters
+  const chitLengthHandler = () => {
+    Alert.alert(
+      '141 characters max',
+      'You exceeded the amount of characters allowed in a chit',
+      [
+        {
+          text: 'Okay',
+          onPress: () => {
+            setChitText('');
+          },
+        },
+      ],
+    );
+  };
+
   const composeModal = (
     <Modal animationType="slide" transparent={false} visible={isComposing}>
       <View style={styles.composeContainer}>
+        {chitText.length > 141 ? chitLengthHandler() : null}
         <Input
           placeholder="Compose your chit..."
           style={styles.composeInput}

@@ -33,7 +33,7 @@ const UserScreen = props => {
 
   useEffect(() => {
     getUserDetailsHandler();
-  }, [userId]);
+  }, [userId, username]);
 
   const getUserDetailsHandler = async () => {
     try {
@@ -60,7 +60,6 @@ const UserScreen = props => {
 
   return (
     <View style={styles.container}>
-      {console.log(userChits)}
       <View style={styles.profileContainer}>
         <View style={styles.picContainer}>
           <View style={styles.temp}></View>

@@ -137,3 +137,28 @@ export const unfollowUser = (userId, token) => {
     });
   };
 };
+
+export const searchUser = searchString => {
+  return async dispatch => {
+    const response = await fetch(
+      `http://10.0.2.2:3333/api/v0.0.5/search_user?q=${searchString}`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    if (!response.ok) {
+      throw new Error('response error!');
+    }
+    const responseData = await response.json();
+    const responseJsonData = JSON.stringify(responseData);
+    console.log('Search user Response = ' + responseJsonData);
+    dispatch({
+      type: SEARCH_USER,
+      searchList: responseData,
+    });
+  };
+};

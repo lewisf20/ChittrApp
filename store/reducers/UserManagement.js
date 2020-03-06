@@ -24,6 +24,7 @@ const initialState = {
   email: null,
   userData: {},
   searchString: null,
+  searchList: [],
 };
 
 export default (state = initialState, action) => {
@@ -72,6 +73,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         searchString: action.searchString,
+        searchList: action.searchList,
       };
     default:
       return state;

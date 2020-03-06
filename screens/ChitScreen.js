@@ -4,8 +4,6 @@ import {useSelector} from 'react-redux';
 
 import Colors from '../constants/Colors';
 import Card from '../components/Card';
-import ChitItem from '../components/ChitItem';
-import {DrawerRouter} from 'react-navigation-drawer';
 /* 
   This screen will show another users profile, listing their chits, how many
   following and followers they have got. It will also include links to a list of
@@ -36,7 +34,7 @@ const ChitScreen = props => {
             })
           }>
           <View style={styles.contentInfo}>
-            <Text style={styles.name}>{username}</Text>
+            <Text style={styles.name}>@{username}</Text>
           </View>
         </TouchableOpacity>
       </Card>
