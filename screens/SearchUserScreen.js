@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,10 @@ import {
 
 import {useSelector, useDispatch} from 'react-redux';
 import * as userActions from '../store/actions/UserManagement';
+import * as authActions from '../store/actions/Authentication';
+
+//import icons
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 //import components
 import Btn from '../components/Btn';
@@ -30,6 +34,7 @@ const SearchUserScreen = props => {
   const searchList = useSelector(state => state.userManagement.searchList);
   const [searchText, setSearchText] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const searchHandler = async () => {
     setIsSearching(true);
@@ -60,6 +65,33 @@ const SearchUserScreen = props => {
     </TouchableOpacity>
   );
 
+  const logOutHandler = async () => {
+    setIsLoading(true);
+    await dispatch(authActions.logout(storeToken));
+    setIsLoading(false);
+    props.navigation.navigate('Home');
+  };
+
+  //buttons for header
+  const loginBtn = !storeToken ? (
+    <TouchableOpacity
+      onPress={() =>
+        props.navigation.navigate('Auth', {
+          route: 'Search',
+        })
+      }>
+      <Icon name="login" size={45} color={Colors.compliment} />
+    </TouchableOpacity>
+  ) : (
+    <TouchableOpacity onPress={logOutHandler}>
+      <Icon name="logout" size={45} color={Colors.compliment} />
+    </TouchableOpacity>
+  );
+
+  useEffect(() => {
+    props.navigation.setParams({loginBtn: loginBtn});
+  }, [storeToken]);
+
   return (
     <View style={styles.container}>
       {console.log(searchList)}
@@ -88,6 +120,13 @@ const SearchUserScreen = props => {
       </View>
     </View>
   );
+};
+
+SearchUserScreen.navigationOptions = navData => {
+  var btn = navData.navigation.getParam('loginBtn');
+  return {
+    headerRight: () => btn,
+  };
 };
 
 const styles = StyleSheet.create({

@@ -10,9 +10,10 @@ import Home from '../screens/Home';
 import UserScreen from '../screens/UserScreen';
 import MyAccountDetails from '../screens/MyAccountDetails';
 import ChitScreen from '../screens/ChitScreen';
+import AuthenticationScreen from '../screens/authentication/AuthenticationScreen';
 
 //import icons
-import Icon from 'react-native-vector-icons/Octicons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 //import colors
 import Colors from '../constants/Colors';
@@ -33,6 +34,7 @@ const HomeStackNavigator = createStackNavigator(
     Home: Home,
     Chit: ChitScreen,
     User: UserScreen,
+    Auth: AuthenticationScreen,
   },
   {
     defaultNavigationOptions: headerOptions,
@@ -43,6 +45,7 @@ const SearchStackNavigator = createStackNavigator(
   {
     Search: SearchUserScreen,
     User: UserScreen,
+    Auth: AuthenticationScreen,
   },
   {
     defaultNavigationOptions: headerOptions,
@@ -53,6 +56,7 @@ const AccountStackNavigator = createStackNavigator(
   {
     Account: MyAccount,
     AccountDetails: MyAccountDetails,
+    Auth: AuthenticationScreen,
   },
   {
     defaultNavigationOptions: headerOptions,
@@ -76,7 +80,7 @@ const TabNavigator = createBottomTabNavigator(
       screen: SearchStackNavigator,
       navigationOptions: {
         tabBarIcon: tabInfo => {
-          return <Icon name="search" size={25} color={tabInfo.tintColor} />;
+          return <Icon name="magnify" size={25} color={tabInfo.tintColor} />;
         },
       },
     },
@@ -84,7 +88,7 @@ const TabNavigator = createBottomTabNavigator(
       screen: AccountStackNavigator,
       navigationOptions: {
         tabBarIcon: tabInfo => {
-          return <Icon name="person" size={25} color={tabInfo.tintColor} />;
+          return <Icon name="account" size={25} color={tabInfo.tintColor} />;
         },
       },
     },

@@ -1,4 +1,3 @@
-export const TOKEN = 'TOKEN';
 export const SIGNUP = 'SIGNUP';
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
@@ -6,10 +5,6 @@ export const LOGOUT = 'LOGOUT';
 /*
 This contains all actions needed for authentication of a user
 */
-
-export const setToken = token => {
-  return {type: TOKEN, token: token};
-};
 
 export const signup = (email, password, givenName, familyName) => {
   return async dispatch => {

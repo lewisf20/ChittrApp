@@ -11,12 +11,14 @@ import {
   Alert,
 } from 'react-native';
 
-//import icons
-import Icon from 'react-native-vector-icons/Octicons';
-
 //bring in redux
 import {useSelector, useDispatch} from 'react-redux';
 import * as chitActions from '../store/actions/ChitManagement';
+import * as authActions from '../store/actions/Authentication';
+
+//import icons
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 //bring in custom components
 import Colors from '../constants/Colors';
 import Btn from '../components/Btn';
@@ -41,6 +43,7 @@ const Home = props => {
   const [chitsLoaded, setChitsLoaded] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
   const [chitText, setChitText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     chitHandler();
@@ -139,6 +142,32 @@ const Home = props => {
     </Text>
   );
 
+  const logOutHandler = async () => {
+    setIsLoading(true);
+    await dispatch(authActions.logout(storeToken));
+    setIsLoading(false);
+  };
+
+  //buttons for header
+  const loginBtn = !storeToken ? (
+    <TouchableOpacity
+      onPress={() =>
+        props.navigation.navigate('Auth', {
+          route: 'Home',
+        })
+      }>
+      <Icon name="login" size={45} color={Colors.compliment} />
+    </TouchableOpacity>
+  ) : (
+    <TouchableOpacity onPress={logOutHandler}>
+      <Icon name="logout" size={45} color={Colors.compliment} />
+    </TouchableOpacity>
+  );
+
+  useEffect(() => {
+    props.navigation.setParams({loginBtn: loginBtn});
+  }, [storeToken]);
+
   //#######################################################################
   //###################### RETURN #########################################
   return (
@@ -158,6 +187,13 @@ const Home = props => {
       )}
     </SafeAreaView>
   );
+};
+
+Home.navigationOptions = navData => {
+  var btn = navData.navigation.getParam('loginBtn');
+  return {
+    headerRight: () => btn,
+  };
 };
 
 const styles = StyleSheet.create({

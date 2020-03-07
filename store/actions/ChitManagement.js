@@ -8,6 +8,7 @@ This contains the actions needed for chit management
 
 /**
  *
+ * @param {String: Authorization token} token
  * getChits retrieves all the chits from the server based on if
  * the user is logged in or not. If the user is logged in, a token is
  * used in the request, if token is null that means the user has not been
@@ -46,7 +47,13 @@ export const getChits = token => {
   };
 };
 
-//NOT BEEN TESTED
+/**
+ *
+ * @param {String: Authorization token} token
+ * @param {the string container the chit to be sent to the server} chit
+ * PostChit sends a chit to the server as long as the authorization token
+ * is valid. If the token is not valid, there will be an auth error.
+ */
 export const postChit = (token, chit) => {
   return async dispatch => {
     let currentDate = Date.now();
