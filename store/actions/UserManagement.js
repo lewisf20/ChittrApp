@@ -162,3 +162,53 @@ export const searchUser = searchString => {
     });
   };
 };
+
+export const getFollowers = userId => {
+  return async dispatch => {
+    const response = await fetch(
+      `http://10.0.2.2:3333/api/v0.0.5/user/${userId}/followers`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    if (!response.ok) {
+      throw new Error('response error!');
+    }
+    const responseData = await response.json();
+    const responseJsonData = JSON.stringify(responseData);
+    console.log('Get followers Response = ' + responseJsonData);
+    dispatch({
+      type: GET_FOLLOWERS,
+      followerList: responseData,
+    });
+  };
+};
+
+export const getFollowing = userId => {
+  return async dispatch => {
+    const response = await fetch(
+      `http://10.0.2.2:3333/api/v0.0.5/user/${userId}/following`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    if (!response.ok) {
+      throw new Error('response error!');
+    }
+    const responseData = await response.json();
+    const responseJsonData = JSON.stringify(responseData);
+    console.log('Get following Response = ' + responseJsonData);
+    dispatch({
+      type: GET_FOLLOWING,
+      followingList: responseData,
+    });
+  };
+};

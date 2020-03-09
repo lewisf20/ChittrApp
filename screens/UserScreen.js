@@ -23,9 +23,16 @@ const UserScreen = props => {
   const dispatch = useDispatch();
   //gets the global token for if the user is logged in
   const storeToken = useSelector(state => state.authentication.token);
+  const loggedInUserId = useSelector(state => state.authentication.userId);
   const userData = useSelector(state => state.userManagement.userData);
   const userChits = userData.recent_chits; // array of recent_chit objects
   const [chitsLoaded, setChitsLoaded] = useState(false);
+
+  //Get follower and following lists and lengths
+  const followers = useSelector(state => state.userManagement.followerList);
+  const following = useSelector(state => state.userManagement.followingList);
+  const followerLength = followers.length;
+  const followingLength = following.length;
 
   //get params
   const username = props.navigation.getParam('username');
@@ -38,10 +45,28 @@ const UserScreen = props => {
   const getUserDetailsHandler = async () => {
     try {
       await dispatch(userActions.getUser(userId));
+      await dispatch(userActions.getFollowers(userId));
+      await dispatch(userActions.getFollowing(userId));
     } catch (err) {
       console.log(err);
     }
     setChitsLoaded(true);
+  };
+
+  const followUserHandler = async () => {
+    try {
+      await dispatch(userActions.followUser(userId, storeToken));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const unfollowUserHandler = async () => {
+    try {
+      await dispatch(userActions.unfollowUser(userId, storeToken));
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const renderChitItem = itemData => (
@@ -58,20 +83,44 @@ const UserScreen = props => {
     </TouchableOpacity>
   );
 
+  let followerBtnContent;
+
+  if (!storeToken) {
+    followerBtnContent = null;
+  } else if (userId === loggedInUserId) {
+    followerBtnContent = null;
+  } else if (followers.some(user => user.user_id === loggedInUserId)) {
+    followerBtnContent = (
+      <Btn
+        title="unfollow"
+        style={styles.unfollowBtn}
+        onPress={unfollowUserHandler}
+      />
+    );
+  } else {
+    followerBtnContent = (
+      <Btn
+        title="follow"
+        style={styles.followBtn}
+        onPress={followUserHandler}
+      />
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
         <View style={styles.picContainer}>
           <View style={styles.temp}></View>
           <Text>@{username}</Text>
-          <Btn title="follow" />
+          {followerBtnContent}
         </View>
         <View style={styles.followActions}>
           <TouchableOpacity>
-            <Text>105 Followers</Text>
+            <Text>{followerLength} Followers</Text>
           </TouchableOpacity>
           <TouchableOpacity>
-            <Text>132 Following</Text>
+            <Text>{followingLength} Following</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -129,6 +178,13 @@ const styles = StyleSheet.create({
     height: 75,
     width: 75,
     backgroundColor: 'blue',
+  },
+  followBtn: {
+    height: 40,
+  },
+  unfollowBtn: {
+    height: 40,
+    backgroundColor: Colors.cancel,
   },
 });
 
