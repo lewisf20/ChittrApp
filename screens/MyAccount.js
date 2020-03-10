@@ -73,17 +73,18 @@ const MyAccount = props => {
     props.navigation.setParams({loginBtn: loginBtn});
   }, [storeToken]);
 
+  if (!storeToken) {
+    return (
+      <View style={styles.loggedOutScreen}>
+        <Text>Log in/Sign up to view the account tab!</Text>
+        <Text></Text>
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.container}>
+    <View style={styles.screen}>
       <Text>My account screen</Text>
-      {/* <Icon name="login" size={50} color="blue" /> */}
-      {console.log('STORE TOKEN = ' + storeToken)}
-      {/* <Btn
-        title="Account Details"
-        onPress={() => {
-          props.navigation.navigate('AccountDetails');
-        }}
-      /> */}
     </View>
   );
 };
@@ -96,43 +97,10 @@ MyAccount.navigationOptions = navData => {
 };
 
 const styles = StyleSheet.create({
-  screen: {
+  loggedOutScreen: {
     flex: 1,
     justifyContent: 'center',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    borderTopWidth: 2,
-    borderBottomWidth: 2,
-    borderColor: Colors.primary,
-  },
-  button: {
-    width: '35%',
-  },
-  card: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  cardButton: {
-    alignSelf: 'center',
-  },
-  cardInput: {},
-  titleText: {
-    color: Colors.primary,
-    textAlign: 'center',
-    fontSize: 52,
-    paddingRight: 10,
-  },
-  welcomeContainer: {
-    padding: 8,
-    borderTopWidth: 5,
-    borderTopColor: Colors.compliment,
-  },
-  welcomeText: {
-    color: Colors.primary,
-    textAlign: 'center',
-    fontSize: 24,
+    alignItems: 'center',
   },
 });
 

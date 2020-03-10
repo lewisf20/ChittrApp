@@ -68,6 +68,7 @@ const UserScreen = props => {
     } catch (err) {
       console.log(err);
     }
+    //refresh usr details
     getUserDetailsHandler();
   };
 
@@ -77,6 +78,7 @@ const UserScreen = props => {
     } catch (err) {
       console.log(err);
     }
+    //refresh user details
     getUserDetailsHandler();
   };
 
@@ -94,13 +96,10 @@ const UserScreen = props => {
     </TouchableOpacity>
   );
 
-  //if not logged in, cant see a button button
-  //if already following, show unfollow button
-  //if userId is same as the persons logged in, don't show a button
-
   let modalContent;
 
-  //if followers have been pressed, return something else
+  //if followers have been pressed, set modal content to show list
+  // of followers
   if (followersPressed) {
     modalContent = (
       <Modal
@@ -142,7 +141,8 @@ const UserScreen = props => {
     );
   }
 
-  //if followers have been pressed, return something else
+  //if following has been pressed, set modal content to list of users
+  //which this particular user follows
   if (followingPressed) {
     modalContent = (
       <Modal
@@ -184,6 +184,14 @@ const UserScreen = props => {
     );
   }
 
+  if (!chitsLoaded) {
+    return (
+      <View style={styles.tempContainer}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       {modalContent}
@@ -217,16 +225,12 @@ const UserScreen = props => {
         </View>
       </View>
       <View style={styles.chitsContainer}>
-        {!chitsLoaded ? (
-          <ActivityIndicator size="large" color={Colors.primary} />
-        ) : (
-          <FlatList
-            contentContainerStyle={styles.list}
-            keyExtractor={item => item.chit_id.toString()}
-            data={userChits}
-            renderItem={renderChitItem}
-          />
-        )}
+        <FlatList
+          contentContainerStyle={styles.list}
+          keyExtractor={item => item.chit_id.toString()}
+          data={userChits}
+          renderItem={renderChitItem}
+        />
       </View>
     </View>
   );
@@ -241,6 +245,11 @@ UserScreen.navigationOptions = navData => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  tempContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   profileContainer: {
     flex: 1 / 4,

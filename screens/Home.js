@@ -153,7 +153,7 @@ const Home = props => {
   );
 
   const composeBtn = (
-    <Btn title="Compose" onPress={() => setIsComposing(true)} />
+    <Btn title="Compose a chit" onPress={() => setIsComposing(true)} />
   );
   const composeText = (
     <Text style={{textAlign: 'center', fontSize: 20}}>
