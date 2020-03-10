@@ -94,7 +94,6 @@ const SearchUserScreen = props => {
 
   return (
     <View style={styles.container}>
-      {console.log(searchList)}
       <View style={styles.inputContainer}>
         <Input
           placeholder="Search for a user..."
@@ -104,7 +103,6 @@ const SearchUserScreen = props => {
           }}
           value={searchText}
         />
-        {/* <Btn title="Search" onPress={searchHandler} /> */}
       </View>
       <View style={styles.listContainer}>
         {isSearching ? (

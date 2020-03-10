@@ -91,8 +91,6 @@ export const followUser = (userId, token) => {
       {
         method: 'POST',
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
           'X-Authorization': token,
         },
       },
@@ -118,8 +116,6 @@ export const unfollowUser = (userId, token) => {
       {
         method: 'DELETE',
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
           'X-Authorization': token,
         },
       },
@@ -131,7 +127,7 @@ export const unfollowUser = (userId, token) => {
     const responseJsonData = JSON.stringify(responseData);
     console.log('Unfollow a user Response = ' + responseJsonData);
     dispatch({
-      type: FOLLOW_USER,
+      type: UNFOLLOW_USER,
       userId: action.userId,
       token: action.token,
     });

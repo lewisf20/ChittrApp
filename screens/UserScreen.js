@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
   FlatList,
   Modal,
-  ScrollView,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import * as userActions from '../store/actions/UserManagement';
@@ -45,10 +44,12 @@ const UserScreen = props => {
   const username = props.navigation.getParam('username');
   const userId = props.navigation.getParam('userId');
 
+  let followTitle;
+
   //get user details if userid or username is changed
   useEffect(() => {
     getUserDetailsHandler();
-  }, [userId, username]);
+  }, [userId, username, followUserHandler, unfollowUserHandler]);
 
   const getUserDetailsHandler = async () => {
     try {
@@ -67,6 +68,7 @@ const UserScreen = props => {
     } catch (err) {
       console.log(err);
     }
+    getUserDetailsHandler();
   };
 
   const unfollowUserHandler = async () => {
@@ -75,6 +77,7 @@ const UserScreen = props => {
     } catch (err) {
       console.log(err);
     }
+    getUserDetailsHandler();
   };
 
   const renderChitItem = itemData => (
@@ -91,32 +94,9 @@ const UserScreen = props => {
     </TouchableOpacity>
   );
 
-  let followerBtnContent;
-
   //if not logged in, cant see a button button
   //if already following, show unfollow button
   //if userId is same as the persons logged in, don't show a button
-  if (!storeToken) {
-    followerBtnContent = null;
-  } else if (userId === loggedInUserId) {
-    followerBtnContent = null;
-  } else if (followers.some(user => user.user_id === loggedInUserId)) {
-    followerBtnContent = (
-      <Btn
-        title="unfollow"
-        style={styles.unfollowBtn}
-        onPress={unfollowUserHandler}
-      />
-    );
-  } else {
-    followerBtnContent = (
-      <Btn
-        title="follow"
-        style={styles.followBtn}
-        onPress={followUserHandler}
-      />
-    );
-  }
 
   let modalContent;
 
@@ -211,8 +191,21 @@ const UserScreen = props => {
         <View style={styles.picContainer}>
           <View style={styles.temp}></View>
           <Text>@{username}</Text>
-          {followerBtnContent}
-          {console.log('followers string = ' + JSON.stringify(followers))}
+          {!storeToken || userId === loggedInUserId ? null : followers.some(
+              user => user.user_id === loggedInUserId,
+            ) ? (
+            <Btn
+              title="unfollow"
+              style={styles.unfollowBtn}
+              onPress={unfollowUserHandler}
+            />
+          ) : (
+            <Btn
+              title="follow"
+              style={styles.followBtn}
+              onPress={followUserHandler}
+            />
+          )}
         </View>
         <View style={styles.followActions}>
           <TouchableOpacity onPress={() => setFollowersPressed(true)}>

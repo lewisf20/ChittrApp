@@ -191,7 +191,6 @@ const Home = props => {
   //###################### RETURN #########################################
   return (
     <SafeAreaView style={styles.screen}>
-      {console.log('store token = ' + storeToken)}
       {storeToken ? composeBtn : composeText}
       {composeModal}
       {!chitsLoaded ? (
