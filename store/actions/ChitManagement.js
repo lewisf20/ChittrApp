@@ -14,7 +14,7 @@ This contains the actions needed for chit management
  * used in the request, if token is null that means the user has not been
  * authenticated and a token will not be used and that gets every chit.
  */
-export const getChits = token => {
+export const getChits = (token, count, start) => {
   return async dispatch => {
     let headers = {};
     if (token !== null) {
@@ -29,10 +29,13 @@ export const getChits = token => {
         'Content-Type': 'application/json',
       };
     }
-    const response = await fetch('http://10.0.2.2:3333/api/v0.0.5/chits', {
-      method: 'GET',
-      headers: headers,
-    });
+    const response = await fetch(
+      `http://10.0.2.2:3333/api/v0.0.5/chits?count=${count}&start=${start}`,
+      {
+        method: 'GET',
+        headers: headers,
+      },
+    );
     if (!response.ok) {
       throw new Error('response error!');
     }

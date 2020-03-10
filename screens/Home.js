@@ -48,13 +48,17 @@ const Home = props => {
   const [chitText, setChitText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  //state to track count and start for getting shits
+  const [count, setCount] = useState(5);
+  const [start, setStart] = useState(0);
+
   useEffect(() => {
     chitHandler();
-  }, [storeToken, isComposing]); //will depend on more than token - will need updating
+  }, [storeToken, isComposing, count]); //will depend on more than token - will need updating
 
   const chitHandler = async () => {
     try {
-      await dispatch(chitActions.getChits(storeToken));
+      await dispatch(chitActions.getChits(storeToken, count, start));
       setChitsLoaded(true);
     } catch (err) {
       console.log(err);
@@ -63,7 +67,14 @@ const Home = props => {
 
   //Refreshes chits when flatlist is pulled - pull to refresh
   const refreshChitsHandler = () => {
+    setCount(5);
     chitHandler();
+  };
+
+  //Load more handler triggers when flatlist is scrolled to the bottom
+  //load more chits for the user to see
+  const loadMoreHandler = () => {
+    setCount(count + 5);
   };
 
   const renderChitItem = itemData => (
@@ -193,6 +204,8 @@ const Home = props => {
           renderItem={renderChitItem}
           refreshing={refreshing}
           onRefresh={refreshChitsHandler}
+          onEndReachedThreshold={0.15}
+          onEndReached={loadMoreHandler}
         />
       )}
     </SafeAreaView>

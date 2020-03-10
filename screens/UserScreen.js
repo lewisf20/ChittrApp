@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   FlatList,
+  Modal,
+  ScrollView,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import * as userActions from '../store/actions/UserManagement';
@@ -16,6 +18,7 @@ import * as userActions from '../store/actions/UserManagement';
   A button to follow/unfollow this particular user will also be on this page.
 */
 import Colors from '../constants/Colors';
+import Card from '../components/Card';
 import Btn from '../components/Btn';
 import ChitItem from '../components/ChitItem';
 
@@ -34,10 +37,15 @@ const UserScreen = props => {
   const followerLength = followers.length;
   const followingLength = following.length;
 
+  //state for if followers or following has been pressed
+  const [followersPressed, setFollowersPressed] = useState(false);
+  const [followingPressed, setFollowingPressed] = useState(false);
+
   //get params
   const username = props.navigation.getParam('username');
   const userId = props.navigation.getParam('userId');
 
+  //get user details if userid or username is changed
   useEffect(() => {
     getUserDetailsHandler();
   }, [userId, username]);
@@ -85,6 +93,9 @@ const UserScreen = props => {
 
   let followerBtnContent;
 
+  //if not logged in, cant see a button button
+  //if already following, show unfollow button
+  //if userId is same as the persons logged in, don't show a button
   if (!storeToken) {
     followerBtnContent = null;
   } else if (userId === loggedInUserId) {
@@ -107,19 +118,107 @@ const UserScreen = props => {
     );
   }
 
+  let modalContent;
+
+  //if followers have been pressed, return something else
+  if (followersPressed) {
+    modalContent = (
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={followersPressed}>
+        <View style={styles.container}>
+          <View style={styles.followContainer}>
+            <FlatList
+              contentContainerStyle={styles.list}
+              keyExtractor={item => item.user_id.toString()}
+              data={followers}
+              renderItem={({item}) => (
+                <TouchableOpacity
+                  style={{
+                    borderBottomWidth: 2,
+                    borderColor: '#cbcbcb',
+                    padding: 10,
+                  }}
+                  activeOpacity={0.75}
+                  onPress={() => {
+                    setFollowersPressed(false);
+                    props.navigation.navigate('User', {
+                      item: item,
+                      username: item.given_name,
+                      userId: item.user_id,
+                    });
+                  }}>
+                  <Card style={styles.userCard}>
+                    <Text style={styles.username}>@{item.given_name}</Text>
+                  </Card>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+          <Btn title="back" onPress={() => setFollowersPressed(false)} />
+        </View>
+      </Modal>
+    );
+  }
+
+  //if followers have been pressed, return something else
+  if (followingPressed) {
+    modalContent = (
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={followingPressed}>
+        <View style={styles.container}>
+          <View style={styles.followContainer}>
+            <FlatList
+              contentContainerStyle={styles.list}
+              keyExtractor={item => item.user_id.toString()}
+              data={following}
+              renderItem={({item}) => (
+                <TouchableOpacity
+                  style={{
+                    borderBottomWidth: 2,
+                    borderColor: '#cbcbcb',
+                    padding: 10,
+                  }}
+                  activeOpacity={0.75}
+                  onPress={() => {
+                    setFollowingPressed(false);
+                    props.navigation.navigate('User', {
+                      item: item,
+                      username: item.given_name,
+                      userId: item.user_id,
+                    });
+                  }}>
+                  <Card style={styles.userCard}>
+                    <Text style={styles.username}>@{item.given_name}</Text>
+                  </Card>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+          <Btn title="back" onPress={() => setFollowingPressed(false)} />
+        </View>
+      </Modal>
+    );
+  }
+
   return (
     <View style={styles.container}>
+      {modalContent}
       <View style={styles.profileContainer}>
         <View style={styles.picContainer}>
           <View style={styles.temp}></View>
           <Text>@{username}</Text>
           {followerBtnContent}
+          {console.log('followers string = ' + JSON.stringify(followers))}
         </View>
         <View style={styles.followActions}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => setFollowersPressed(true)}>
             <Text>{followerLength} Followers</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => setFollowingPressed(true)}>
             <Text>{followingLength} Following</Text>
           </TouchableOpacity>
         </View>
@@ -161,6 +260,9 @@ const styles = StyleSheet.create({
   chitsContainer: {
     flex: 3 / 4,
   },
+  followContainer: {
+    flex: 1,
+  },
   picContainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -185,6 +287,14 @@ const styles = StyleSheet.create({
   unfollowBtn: {
     height: 40,
     backgroundColor: Colors.cancel,
+  },
+  userCard: {
+    width: '100%',
+  },
+  username: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: Colors.primary,
   },
 });
 

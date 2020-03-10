@@ -9,6 +9,8 @@ const initialState = {
   chit: null,
   token: null,
   userId: null,
+  start: 0,
+  count: 10,
 };
 
 export default (state = initialState, action) => {
