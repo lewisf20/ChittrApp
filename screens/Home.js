@@ -39,6 +39,9 @@ const Home = props => {
   const storeToken = useSelector(state => state.authentication.token);
   const storeChitList = useSelector(state => state.chitManagement.chitList);
 
+  //pull to refresh state
+  const [refreshing, setRefreshing] = useState(false);
+
   //State to hold whether storeChitList has loaded
   const [chitsLoaded, setChitsLoaded] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
@@ -56,6 +59,11 @@ const Home = props => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  //Refreshes chits when flatlist is pulled - pull to refresh
+  const refreshChitsHandler = () => {
+    chitHandler();
   };
 
   const renderChitItem = itemData => (
@@ -183,6 +191,8 @@ const Home = props => {
           keyExtractor={item => item.chit_id.toString()}
           data={storeChitList}
           renderItem={renderChitItem}
+          refreshing={refreshing}
+          onRefresh={refreshChitsHandler}
         />
       )}
     </SafeAreaView>
