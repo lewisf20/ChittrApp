@@ -219,17 +219,8 @@ const AuthenticationScreen = props => {
 
   return (
     <View style={styles.container}>
-      <Text>My account screen</Text>
       {loginModalContent}
       {signUpModalContent}
-      {/* <Icon name="login" size={50} color="blue" /> */}
-      {console.log('STORE TOKEN = ' + storeToken)}
-      {/* <Btn
-        title="Account Details"
-        onPress={() => {
-          props.navigation.navigate('AccountDetails');
-        }}
-      /> */}
     </View>
   );
 };

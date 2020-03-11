@@ -30,8 +30,6 @@ export const getUser = userId => {
       throw new Error('response error!');
     }
     const responseData = await response.json();
-    const responseJsonData = JSON.stringify(responseData);
-    console.log('getuser Response = ' + responseJsonData);
     dispatch({
       type: GET_USER,
       userId: userId,
@@ -74,12 +72,12 @@ export const updateUser = (
     console.log('update user Response = ' + responseJsonData);
     dispatch({
       type: UPDATE_USER,
-      userId: action.userId,
-      token: action.token,
-      givenName: action.givenName,
-      familyName: action.familyName,
-      email: action.email,
-      password: action.password,
+      userId: userId,
+      token: token,
+      givenName: givenName,
+      familyName: familyName,
+      email: email,
+      password: password,
     });
   };
 };
@@ -98,13 +96,10 @@ export const followUser = (userId, token) => {
     if (!response.ok) {
       throw new Error('response error!');
     }
-    const responseData = await response.json();
-    const responseJsonData = JSON.stringify(responseData);
-    console.log('Follow a user Response = ' + responseJsonData);
     dispatch({
       type: FOLLOW_USER,
-      userId: action.userId,
-      token: action.token,
+      userId: userId,
+      token: token,
     });
   };
 };
@@ -123,13 +118,10 @@ export const unfollowUser = (userId, token) => {
     if (!response.ok) {
       throw new Error('response error!');
     }
-    const responseData = await response.json();
-    const responseJsonData = JSON.stringify(responseData);
-    console.log('Unfollow a user Response = ' + responseJsonData);
     dispatch({
       type: UNFOLLOW_USER,
-      userId: action.userId,
-      token: action.token,
+      userId: userId,
+      token: token,
     });
   };
 };

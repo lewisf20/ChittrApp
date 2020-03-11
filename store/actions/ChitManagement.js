@@ -40,8 +40,6 @@ export const getChits = (token, count, start) => {
       throw new Error('response error!');
     }
     const responseData = await response.json();
-    const responseJsonData = JSON.stringify(responseData);
-    console.log('getchits Response = ' + responseJsonData);
     dispatch({
       type: GET_CHITS,
       chitList: responseData,

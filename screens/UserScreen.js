@@ -25,7 +25,7 @@ const UserScreen = props => {
   const dispatch = useDispatch();
   //gets the global token for if the user is logged in
   const storeToken = useSelector(state => state.authentication.token);
-  const loggedInUserId = useSelector(state => state.authentication.userId);
+  const loggedInUserId = useSelector(state => state.authentication.idUser);
   const userData = useSelector(state => state.userManagement.userData);
   const userChits = userData.recent_chits; // array of recent_chit objects
   const [chitsLoaded, setChitsLoaded] = useState(false);
