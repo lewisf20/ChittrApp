@@ -56,6 +56,20 @@ const Home = props => {
     chitHandler();
   }, [storeToken, isComposing, count]); //will depend on more than token - will need updating
 
+  //Updates feed when user clicks on home tab - when home screen
+  //is in focus
+  useEffect(() => {
+    const onFocusListener = props.navigation.addListener(
+      'didFocus',
+      payload => {
+        chitHandler();
+      },
+    );
+    return () => {
+      onFocusListener.remove();
+    };
+  });
+
   const chitHandler = async () => {
     try {
       await dispatch(chitActions.getChits(storeToken, count, start));
