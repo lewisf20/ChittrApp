@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   FlatList,
+  TouchableOpacityBase,
 } from 'react-native';
 
 //import icons
@@ -33,15 +34,26 @@ const MyAccount = props => {
   const dispatch = useDispatch();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  //sets token on the global state, the store
+  //gets token from the global state, the store
   const storeToken = useSelector(state => state.authentication.token);
-  const loggedInidUser = useSelector(state => state.authentication.idUser);
+  const idUser = useSelector(state => state.authentication.idUser);
+
   const [error, setError] = useState();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [userData, setUserData] = useState({});
   const [name, setName] = useState('');
   const [chits, setChits] = useState([]);
+  const [listFollowing, setListFollowing] = useState([]);
+  const [listFollowers, setListFollowers] = useState([]);
+  const amountFollowing = listFollowing.length;
+  const amountFollowers = listFollowers.length;
+
+  //state for if followers or following has been pressed
+  const [followersPressed, setFollowersPressed] = useState(false);
+  const [followingPressed, setFollowingPressed] = useState(false);
+
+  const isFocused = props.navigation.isFocused();
 
   //alert the user to an error on login or signup
   useEffect(() => {
@@ -50,14 +62,41 @@ const MyAccount = props => {
     }
   }, [error]);
 
+  //This checks whether user navigate back to account screen, and
+  // updates that screen accordingly
+  useEffect(() => {
+    const onFocusListener = props.navigation.addListener(
+      'didFocus',
+      payload => {
+        getUserDetailsHandler();
+      },
+    );
+    return () => {
+      onFocusListener.remove();
+    };
+  });
+
+  //Get users data upon loading after the user has logged in
   useEffect(() => {
     if (!storeToken) return;
     else {
-      setIsLoading(true);
-      getUserData();
-      setIsLoading(false);
+      getUserDetailsHandler();
     }
-  }, [storeToken]);
+  }, [storeToken, followersPressed, followingPressed]);
+
+  //Calls the functions which deal with getting the logged in
+  //user's data
+  const getUserDetailsHandler = async () => {
+    setIsLoading(true);
+    try {
+      getUserData();
+      getFollowers();
+      getFollowing();
+    } catch (err) {
+      console.log(err);
+    }
+    setIsLoading(false);
+  };
 
   const logOutHandler = async () => {
     setIsLoading(true);
@@ -104,9 +143,97 @@ const MyAccount = props => {
     </TouchableOpacity>
   );
 
+  let modalContent;
+
+  //if followers have been pressed, set modal content to show list
+  // of followers
+  if (followersPressed) {
+    modalContent = (
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={followersPressed}>
+        <View style={styles.container}>
+          <View style={styles.followContainer}>
+            <FlatList
+              contentContainerStyle={styles.list}
+              keyExtractor={item => item.user_id.toString()}
+              data={listFollowers}
+              renderItem={({item}) => (
+                <TouchableOpacity
+                  style={{
+                    borderBottomWidth: 2,
+                    borderColor: '#cbcbcb',
+                    padding: 10,
+                  }}
+                  activeOpacity={0.75}
+                  onPress={() => {
+                    setFollowersPressed(false);
+                    props.navigation.navigate('User', {
+                      item: item,
+                      username: item.given_name,
+                      userId: item.user_id,
+                    });
+                  }}>
+                  <Card style={styles.userCard}>
+                    <Text style={styles.username}>@{item.given_name}</Text>
+                  </Card>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+          <Btn title="back" onPress={() => setFollowersPressed(false)} />
+        </View>
+      </Modal>
+    );
+  }
+
+  //if following has been pressed, set modal content to list of users
+  //which this particular user follows
+  if (followingPressed) {
+    modalContent = (
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={followingPressed}>
+        <View style={styles.container}>
+          <View style={styles.followContainer}>
+            <FlatList
+              contentContainerStyle={styles.list}
+              keyExtractor={item => item.user_id.toString()}
+              data={listFollowing}
+              renderItem={({item}) => (
+                <TouchableOpacity
+                  style={{
+                    borderBottomWidth: 2,
+                    borderColor: '#cbcbcb',
+                    padding: 10,
+                  }}
+                  activeOpacity={0.75}
+                  onPress={() => {
+                    setFollowingPressed(false);
+                    props.navigation.navigate('User', {
+                      item: item,
+                      username: item.given_name,
+                      userId: item.user_id,
+                    });
+                  }}>
+                  <Card style={styles.userCard}>
+                    <Text style={styles.username}>@{item.given_name}</Text>
+                  </Card>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+          <Btn title="back" onPress={() => setFollowingPressed(false)} />
+        </View>
+      </Modal>
+    );
+  }
+
   const getUserData = async () => {
     const response = await fetch(
-      `http://10.0.2.2:3333/api/v0.0.5/user/${loggedInidUser}`,
+      `http://10.0.2.2:3333/api/v0.0.5/user/${idUser}`,
       {
         method: 'GET',
         headers: {
@@ -124,6 +251,46 @@ const MyAccount = props => {
     setChits(responseData.recent_chits);
   };
 
+  const getFollowers = async () => {
+    const response = await fetch(
+      `http://10.0.2.2:3333/api/v0.0.5/user/${idUser}/followers`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    if (!response.ok) {
+      throw new Error('response error!');
+    }
+    const responseData = await response.json();
+    setListFollowers(responseData);
+    // const responseJsonData = JSON.stringify(responseData);
+    // console.log('Get followers Response = ' + responseJsonData);
+  };
+
+  const getFollowing = async () => {
+    const response = await fetch(
+      `http://10.0.2.2:3333/api/v0.0.5/user/${idUser}/following`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    if (!response.ok) {
+      throw new Error('response error!');
+    }
+    const responseData = await response.json();
+    setListFollowing(responseData);
+    // const responseJsonData = JSON.stringify(responseData);
+    // console.log('Get following Response = ' + responseJsonData);
+  };
+
   if (isLoading) {
     return (
       <View style={styles.loggedOutScreen}>
@@ -134,11 +301,23 @@ const MyAccount = props => {
 
   return (
     <View style={styles.container}>
+      {modalContent}
       <View style={styles.profileContainer}>
         <View style={styles.picContainer}>
           <View style={styles.temp}></View>
-          <Text>@{name}</Text>
+          <Text style={styles.username}>@{name}</Text>
         </View>
+        <TouchableOpacity onPress={() => setFollowersPressed(true)}>
+          <Text>{amountFollowers} Followers</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setFollowingPressed(true)}>
+          <Text>{amountFollowing} Following</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.settings}
+          onPress={() => props.navigation.navigate('AccountDetails')}>
+          <Icon name="settings" size={30} color={Colors.primary} />
+        </TouchableOpacity>
       </View>
       <View style={styles.chitsContainer}>
         <FlatList
@@ -174,15 +353,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profileContainer: {
-    flex: 1 / 4,
-    flexDirection: 'row',
+    flex: 1 / 3,
+    flexDirection: 'column',
     justifyContent: 'space-around',
+    alignItems: 'center',
     borderBottomWidth: 1,
     borderColor: Colors.background,
     padding: 15,
   },
   chitsContainer: {
-    flex: 3 / 4,
+    flex: 2 / 3,
   },
   followContainer: {
     flex: 1,
@@ -205,13 +385,6 @@ const styles = StyleSheet.create({
     width: 75,
     backgroundColor: 'blue',
   },
-  followBtn: {
-    height: 40,
-  },
-  unfollowBtn: {
-    height: 40,
-    backgroundColor: Colors.cancel,
-  },
   userCard: {
     width: '100%',
   },
@@ -219,6 +392,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: Colors.primary,
+  },
+  settings: {
+    alignSelf: 'flex-end',
   },
 });
 

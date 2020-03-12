@@ -57,6 +57,7 @@ const AccountStackNavigator = createStackNavigator(
     Account: MyAccount,
     AccountDetails: MyAccountDetails,
     Auth: AuthenticationScreen,
+    User: UserScreen,
   },
   {
     defaultNavigationOptions: headerOptions,
