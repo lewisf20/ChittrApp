@@ -67,6 +67,9 @@ const AuthenticationScreen = props => {
     setIsLoading(true);
     try {
       await dispatch(action);
+      if (signUpVisible) {
+        await dispatch(authActions.login(email, password));
+      }
       setLogInVisible(false);
       props.navigation.navigate(route);
       setIsLoggedIn(true);

@@ -167,7 +167,12 @@ const Home = props => {
   );
 
   const composeBtn = (
-    <Btn title="Compose a chit" onPress={() => setIsComposing(true)} />
+    // <Btn title="Compose a chit" onPress={() => setIsComposing(true)} />
+    <TouchableOpacity
+      style={styles.iconContainer}
+      onPress={() => setIsComposing(true)}>
+      <Icon name="pen-plus" size={45} color={Colors.primary} />
+    </TouchableOpacity>
   );
   const composeText = (
     <Text style={{textAlign: 'center', fontSize: 20}}>
@@ -254,6 +259,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderBottomWidth: 2,
     borderRadius: 10,
+  },
+  iconContainer: {
+    alignSelf: 'center',
+    marginTop: 20,
   },
 });
 
