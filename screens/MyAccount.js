@@ -315,7 +315,11 @@ const MyAccount = props => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.settings}
-          onPress={() => props.navigation.navigate('AccountDetails')}>
+          onPress={() =>
+            props.navigation.navigate('AccountDetails', {
+              userData: userData,
+            })
+          }>
           <Icon name="settings" size={30} color={Colors.primary} />
         </TouchableOpacity>
       </View>
