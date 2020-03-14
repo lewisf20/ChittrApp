@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, Alert} from 'react-native';
+import {View, Text, StyleSheet, Alert, Modal} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import Colors from '../constants/Colors';
@@ -34,6 +34,8 @@ const MyAccountDetails = props => {
       console.log(err);
     }
   };
+
+  const pickImageModal = <Modal></Modal>;
 
   const updateUser = async () => {
     const response = await fetch(
