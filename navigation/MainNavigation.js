@@ -8,6 +8,7 @@ import MyAccount from '../screens/MyAccount';
 import SearchUserScreen from '../screens/SearchUserScreen';
 import Home from '../screens/Home';
 import UserScreen from '../screens/UserScreen';
+import MapScreen from '../screens/MapScreen';
 import MyAccountDetails from '../screens/MyAccountDetails';
 import ChitScreen from '../screens/ChitScreen';
 import AuthenticationScreen from '../screens/authentication/AuthenticationScreen';
@@ -35,6 +36,7 @@ const HomeStackNavigator = createStackNavigator(
     Chit: ChitScreen,
     User: UserScreen,
     Auth: AuthenticationScreen,
+    Map: MapScreen,
   },
   {
     defaultNavigationOptions: headerOptions,

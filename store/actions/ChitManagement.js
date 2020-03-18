@@ -55,7 +55,11 @@ export const getChits = (token, count, start) => {
  * PostChit sends a chit to the server as long as the authorization token
  * is valid. If the token is not valid, there will be an auth error.
  */
-export const postChit = (token, chit) => {
+export const postChit = (
+  token,
+  chit,
+  location = {longitude: 0, latitude: 0},
+) => {
   return async dispatch => {
     let currentDate = Date.now();
     const response = await fetch('http://10.0.2.2:3333/api/v0.0.5/chits', {
@@ -68,7 +72,10 @@ export const postChit = (token, chit) => {
       body: JSON.stringify({
         timestamp: currentDate,
         chit_content: chit,
-        //add location here
+        location: {
+          longitude: location.longitude,
+          latitude: location.latitude,
+        },
       }),
     });
     if (!response.ok) {
@@ -79,8 +86,9 @@ export const postChit = (token, chit) => {
     console.log('post chit Response = ' + responseJsonData);
     dispatch({
       type: POST_CHIT,
-      token: action.token,
-      chit: action.chit,
+      token: token,
+      chit: chit,
+      location: location,
     });
   };
 };

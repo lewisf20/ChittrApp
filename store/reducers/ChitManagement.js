@@ -11,6 +11,7 @@ const initialState = {
   userId: null,
   start: 0,
   count: 10,
+  location: {},
 };
 
 export default (state = initialState, action) => {
@@ -24,6 +25,7 @@ export default (state = initialState, action) => {
       return {
         token: action.token,
         chit: action.chit,
+        location: action.location,
       };
     default:
       return state;

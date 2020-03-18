@@ -53,7 +53,7 @@ const Home = props => {
   const [isLoading, setIsLoading] = useState(false);
 
   //state for location
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState({longitude: 0, latitude: 0});
   const [locPermission, setLocPermission] = useState(false);
 
   //state to track count and start for getting shits
@@ -117,7 +117,7 @@ const Home = props => {
   const postChitHandler = async () => {
     try {
       setChitsLoaded(false);
-      await dispatch(chitActions.postChit(storeToken, chitText));
+      await dispatch(chitActions.postChit(storeToken, chitText, location));
     } catch (err) {
       console.log(err);
     }
@@ -146,7 +146,10 @@ const Home = props => {
       position => {
         const loc = JSON.stringify(position);
         console.log(loc);
-        setLocation(loc);
+        setLocation({
+          longitude: position.coords.longitude,
+          latitude: position.coords.latitude,
+        });
       },
       err => {
         Alert.alert(err.message);
@@ -190,6 +193,7 @@ const Home = props => {
     if (!locPermission) {
       requestLocationPermission();
       findCoordinates();
+      console.log('location = ' + location);
     }
   };
 
@@ -226,11 +230,6 @@ const Home = props => {
           />
         )}
         <Btn
-          title="Click to use Location"
-          style={{backgroundColor: Colors.primary}}
-          onPress={findCoordinates}
-        />
-        <Btn
           title="Cancel"
           style={{backgroundColor: Colors.cancel}}
           onPress={() => setIsComposing(false)}
@@ -240,12 +239,24 @@ const Home = props => {
   );
 
   const composeBtn = (
-    // <Btn title="Compose a chit" onPress={() => setIsComposing(true)} />
-    <TouchableOpacity
-      style={styles.iconContainer}
-      onPress={() => setIsComposing(true)}>
-      <Icon name="pen-plus" size={45} color={Colors.primary} />
-    </TouchableOpacity>
+    <View>
+      {locPermission ? (
+        <Btn
+          title="View Location"
+          onPress={() =>
+            props.navigation.navigate('Map', {
+              location: location,
+            })
+          }
+        />
+      ) : null}
+
+      <TouchableOpacity
+        style={styles.iconContainer}
+        onPress={() => setIsComposing(true)}>
+        <Icon name="pen-plus" size={45} color={Colors.primary} />
+      </TouchableOpacity>
+    </View>
   );
   const composeText = (
     <Text style={{textAlign: 'center', fontSize: 20}}>
