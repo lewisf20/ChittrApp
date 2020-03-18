@@ -9,7 +9,11 @@ import {
   View,
   Modal,
   Alert,
+  PermissionsAndroid,
+  Switch,
 } from 'react-native';
+
+import Geolocation from 'react-native-geolocation-service';
 
 //bring in redux
 import {useSelector, useDispatch} from 'react-redux';
@@ -47,6 +51,10 @@ const Home = props => {
   const [isComposing, setIsComposing] = useState(false);
   const [chitText, setChitText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  //state for location
+  const [location, setLocation] = useState(null);
+  const [locPermission, setLocPermission] = useState(false);
 
   //state to track count and start for getting shits
   const [count, setCount] = useState(5);
@@ -133,10 +141,71 @@ const Home = props => {
     );
   };
 
+  const findCoordinates = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        const loc = JSON.stringify(position);
+        console.log(loc);
+        setLocation(loc);
+      },
+      err => {
+        Alert.alert(err.message);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 20000,
+        maximumAge: 1000,
+      },
+    ).catch(err => {
+      console.log(err);
+    });
+  };
+
+  async function requestLocationPermission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Chit location permission',
+          message: 'This requires access to your location',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'Ok',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Location permission granted.');
+        return true;
+      } else {
+        console.log('Location permission denied');
+        return false;
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
+  const switchHandler = () => {
+    setLocPermission(!locPermission);
+    if (!locPermission) {
+      requestLocationPermission();
+      findCoordinates();
+    }
+  };
+
   const composeModal = (
     <Modal animationType="slide" transparent={false} visible={isComposing}>
       <View style={styles.composeContainer}>
         {chitText.length > 141 ? chitLengthHandler() : null}
+        <View style={styles.switchContainer}>
+          <Text>Enable location?</Text>
+          <Switch
+            value={locPermission}
+            onValueChange={val => {
+              switchHandler();
+            }}
+          />
+        </View>
         <Input
           placeholder="Compose your chit..."
           style={styles.composeInput}
@@ -156,7 +225,11 @@ const Home = props => {
             }}
           />
         )}
-
+        <Btn
+          title="Click to use Location"
+          style={{backgroundColor: Colors.primary}}
+          onPress={findCoordinates}
+        />
         <Btn
           title="Cancel"
           style={{backgroundColor: Colors.cancel}}
@@ -254,6 +327,10 @@ const styles = StyleSheet.create({
   composeContainer: {
     flex: 1,
     justifyContent: 'center',
+  },
+  switchContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   composeInput: {
     borderWidth: 2,

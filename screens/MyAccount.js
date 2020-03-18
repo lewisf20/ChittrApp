@@ -65,15 +65,17 @@ const MyAccount = props => {
   //This checks whether user navigate back to account screen, and
   // updates that screen accordingly
   useEffect(() => {
-    const onFocusListener = props.navigation.addListener(
-      'didFocus',
-      payload => {
-        getUserDetailsHandler();
-      },
-    );
-    return () => {
-      onFocusListener.remove();
-    };
+    if (storeToken) {
+      const onFocusListener = props.navigation.addListener(
+        'didFocus',
+        payload => {
+          getUserDetailsHandler();
+        },
+      );
+      return () => {
+        onFocusListener.remove();
+      };
+    }
   });
 
   //Get users data upon loading after the user has logged in
