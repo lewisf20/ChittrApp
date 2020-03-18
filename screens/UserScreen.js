@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   FlatList,
   Modal,
+  Image,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import * as userActions from '../store/actions/UserManagement';
@@ -29,6 +30,7 @@ const UserScreen = props => {
   const userData = useSelector(state => state.userManagement.userData);
   const userChits = userData.recent_chits; // array of recent_chit objects
   const [chitsLoaded, setChitsLoaded] = useState(false);
+  const [imgResponse, setImgResponse] = useState(null);
 
   //Get follower and following lists and lengths
   const followers = useSelector(state => state.userManagement.followerList);
@@ -56,6 +58,7 @@ const UserScreen = props => {
       await dispatch(userActions.getUser(userId));
       await dispatch(userActions.getFollowers(userId));
       await dispatch(userActions.getFollowing(userId));
+      await getPhoto();
     } catch (err) {
       console.log(err);
     }
@@ -96,6 +99,30 @@ const UserScreen = props => {
     </TouchableOpacity>
   );
 
+  const getPhoto = async () => {
+    const response = await fetch(
+      `http://10.0.2.2:3333/api/v0.0.5/user/${userId}/photo`,
+      {
+        method: 'GET',
+      },
+    )
+      .then(response => {
+        let respdata = response.blob();
+        console.log(respdata);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  function arrayBufferToBase64(buffer) {
+    var binary = '';
+    var bytes = [].slice.call(new Uint8Array(buffer));
+
+    bytes.forEach(b => (binary += String.fromCharCode(b)));
+
+    return window.btoa(binary);
+  }
   let modalContent;
 
   //if followers have been pressed, set modal content to show list
@@ -197,7 +224,9 @@ const UserScreen = props => {
       {modalContent}
       <View style={styles.profileContainer}>
         <View style={styles.picContainer}>
-          <View style={styles.temp}></View>
+          <View style={styles.temp}>
+            <Image />
+          </View>
           <Text>@{username}</Text>
           {!storeToken || userId === loggedInUserId ? null : followers.some(
               user => user.user_id === loggedInUserId,
