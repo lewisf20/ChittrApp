@@ -12,6 +12,7 @@ import MapScreen from '../screens/MapScreen';
 import MyAccountDetails from '../screens/MyAccountDetails';
 import ChitScreen from '../screens/ChitScreen';
 import AuthenticationScreen from '../screens/authentication/AuthenticationScreen';
+import ViewDrafts from '../screens/ViewDrafts';
 
 //import icons
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -37,6 +38,7 @@ const HomeStackNavigator = createStackNavigator(
     User: UserScreen,
     Auth: AuthenticationScreen,
     Map: MapScreen,
+    Drafts: ViewDrafts,
   },
   {
     defaultNavigationOptions: headerOptions,

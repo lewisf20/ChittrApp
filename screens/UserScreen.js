@@ -58,7 +58,7 @@ const UserScreen = props => {
       await dispatch(userActions.getUser(userId));
       await dispatch(userActions.getFollowers(userId));
       await dispatch(userActions.getFollowing(userId));
-      await getPhoto();
+      // await getPhoto();
     } catch (err) {
       console.log(err);
     }
@@ -99,21 +99,21 @@ const UserScreen = props => {
     </TouchableOpacity>
   );
 
-  const getPhoto = async () => {
-    const response = await fetch(
-      `http://10.0.2.2:3333/api/v0.0.5/user/${userId}/photo`,
-      {
-        method: 'GET',
-      },
-    )
-      .then(response => {
-        let respdata = response.blob();
-        console.log(respdata);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
+  // const getPhoto = async () => {
+  //   const response = await fetch(
+  //     `http://10.0.2.2:3333/api/v0.0.5/user/${userId}/photo`,
+  //     {
+  //       method: 'GET',
+  //     },
+  //   )
+  //     .then(response => {
+  //       let respdata = response.blob();
+  //       console.log(respdata);
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //     });
+  // };
 
   function arrayBufferToBase64(buffer) {
     var binary = '';

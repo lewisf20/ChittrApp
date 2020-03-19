@@ -11,6 +11,7 @@ import {
   Alert,
   PermissionsAndroid,
   Switch,
+  AsyncStorage,
 } from 'react-native';
 
 import Geolocation from 'react-native-geolocation-service';
@@ -52,6 +53,9 @@ const Home = props => {
   const [chitText, setChitText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  //state to save drafts
+  const [chitDrafts, setChitDrafts] = useState([]);
+
   //state for location
   const [location, setLocation] = useState({longitude: 0, latitude: 0});
   const [locPermission, setLocPermission] = useState(false);
@@ -62,6 +66,7 @@ const Home = props => {
 
   useEffect(() => {
     chitHandler();
+    getAllChitDrafts();
   }, [storeToken, isComposing, count]); //will depend on more than token - will need updating
 
   //Updates feed when user clicks on home tab - when home screen
@@ -197,6 +202,37 @@ const Home = props => {
     }
   };
 
+  //save drafts by pushing chittext to an array in async storage
+  const saveChitDraft = async () => {
+    try {
+      setChitDrafts(chitDrafts.push(chitText));
+      let stringifiedArray = JSON.stringify(chitDrafts);
+      await AsyncStorage.setItem('drafts', stringifiedArray);
+      console.log(chitText + ' has been saved.');
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const removeFromDrafts = async () => {
+    try {
+      const value = await AsyncStorage.removeItem('drafts');
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getAllChitDrafts = async () => {
+    try {
+      let value = await AsyncStorage.getItem('drafts');
+      let jsonValue = JSON.parse(value);
+      setChitDrafts(jsonValue);
+      console.log(jsonValue);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const composeModal = (
     <Modal animationType="slide" transparent={false} visible={isComposing}>
       <View style={styles.composeContainer}>
@@ -229,6 +265,22 @@ const Home = props => {
             }}
           />
         )}
+        <Btn
+          title="Save to drafts"
+          style={{backgroundColor: Colors.primary}}
+          onPress={() => saveChitDraft()}
+        />
+        <Btn
+          title="View drafts"
+          style={{backgroundColor: Colors.primary}}
+          onPress={() => {
+            setIsComposing(false);
+            props.navigation.navigate('Drafts', {
+              drafts: chitDrafts,
+              location: location,
+            });
+          }}
+        />
         <Btn
           title="Cancel"
           style={{backgroundColor: Colors.cancel}}
