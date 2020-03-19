@@ -1,4 +1,7 @@
 
+# ChittrApp  
+
+
 **ChittrApp** is a social media app which allows users to communicate via 'chits'. An account is not required to see user's chits. However, to post chits, follow and unfollow and access location, a user can signup for free. 
 
 ## Installation
