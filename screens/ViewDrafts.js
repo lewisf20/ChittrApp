@@ -20,7 +20,7 @@ const ViewDrafts = props => {
       let value = await AsyncStorage.getItem('drafts');
       let jsonValue = JSON.parse(value);
       setChitDrafts(jsonValue);
-      console.log(jsonValue);
+      //console.log(jsonValue);
     } catch (err) {
       console.log(err);
     }
@@ -50,7 +50,7 @@ const ViewDrafts = props => {
       setChitDrafts(newValue);
       const stringify = JSON.stringify(newValue);
       await AsyncStorage.setItem('drafts', stringify);
-      console.log('new val = ' + newValue);
+      //console.log('new val = ' + newValue);
     } catch (err) {
       console.log(err);
     }
@@ -66,7 +66,7 @@ const ViewDrafts = props => {
             style={styles.buttons}
             onPress={() => {
               let theChit = itemData.item.toString();
-              console.log('chit = ' + theChit);
+              //console.log('chit = ' + theChit);
               postChitHandler(theChit);
             }}
           />
@@ -85,7 +85,7 @@ const ViewDrafts = props => {
   return (
     <View style={styles.container}>
       <Text>View Drafts Screen</Text>
-      {console.log('Draft screen = ' + chitDrafts)}
+      {/* {console.log('Draft screen = ' + chitDrafts)} */}
       <FlatList
         contentContainerStyle={styles.list}
         keyExtractor={item => item.toString()}

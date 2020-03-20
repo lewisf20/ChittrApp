@@ -214,20 +214,12 @@ const Home = props => {
     }
   };
 
-  const removeFromDrafts = async () => {
-    try {
-      const value = await AsyncStorage.removeItem('drafts');
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const getAllChitDrafts = async () => {
     try {
       let value = await AsyncStorage.getItem('drafts');
       let jsonValue = JSON.parse(value);
       setChitDrafts(jsonValue);
-      console.log(jsonValue);
+      //console.log(jsonValue);
     } catch (err) {
       console.log(err);
     }
